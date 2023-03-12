@@ -6,3 +6,15 @@ incorporate new elements of your code. Write the instructions for a user who wil
 RMIT’s myDesktop (https://mydesktop.rmit.edu.au/) to run your code. You should test these
 instructions to make sure they work – have a member of your team follow your own
 instructions using RMIT’s myDesktop facility, step by step!
+
+
+
+
+To use the ticketing-system program you will have to open up an IDE that is capable of running JAVA. 
+To do this browse to https://mydesktop.rmit.edu.au/ and login using your RMIT student details. 
+After you have logged in, go to the Apps tab located on the left hand side pane. From there you should 
+see a lot of applications available to you to use. Search and select on the Eclipse application, there could be 
+multiple so for this just select the one without a date in its name. 
+Once you have selected Eclipse, it will open up a new window and ask if you want to launch the application. Leave 
+everything as default and select Launch.
+ 
