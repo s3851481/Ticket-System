@@ -15,6 +15,23 @@ To do this browse to https://mydesktop.rmit.edu.au/ and login using your RMIT st
 After you have logged in, go to the Apps tab located on the left hand side pane. From there you should 
 see a lot of applications available to you to use. Search and select on the Eclipse application, there could be 
 multiple so for this just select the one without a date in its name. 
-Once you have selected Eclipse, it will open up a new window and ask if you want to launch the application. Leave 
-everything as default and select Launch.
+To run a java program through Eclipse follow these steps 
+
+1. Open Eclipse and create a new project by selecting "File" > "New" > "Java Project".
+
+2. Name the project and select a default JRE version.
+
+3. Right-click on the project in the Package Explorer and select "Import".
+
+4. Select "File System" and browse to the location of the Java program you want to run.
+
+5. Select the Java file and click "Finish" to import it into your project.
+
+6. Once the file is imported, right-click on it in the Package Explorer and select "Run As" > "Java Application".
+
+7. If the program requires any command-line arguments, you can specify them in the "Run Configurations" dialog.
+
+8. Click "Run" to execute the program.
+
+Alternatively, you can also create a new "Run Configuration" by selecting "Run" > "Run Configurations" and then selecting "Java Application". From there, you can specify the project and main class to run.
  
