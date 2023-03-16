@@ -87,10 +87,27 @@ import java.io.FileWriter;
                          System.out.println("Invalid username or password.");
                      }
                      break;
-                 case 3:
+                     case 3:
                      // Code for Forgotten/Reset Password Feature
                      System.out.println("Selected Forgotten/Reset Password Feature");
+                     System.out.println("Please enter your email address:");
+                     String email2 = scanner.next();
+                 
+                     // Find the user account with the matching email address
+                     boolean foundEmail = false;
+                     for (AccountSetup account : accountList) {
+                         if (account.getEmail().equals(email2)) {
+                             foundEmail = true;
+                             System.out.println("An email with instructions for resetting your password has been sent to " + email2);
+                             // Code to send password reset email would go here
+                             break;
+                         }
+                     }
+                     if (!foundEmail) {
+                         System.out.println("No user account found with email address " + email2);
+                     }
                      break;
+                 
                  case 4:
                      // Code for Submit Ticket Feature
                      System.out.println("Selected Submit Ticket Feature");
@@ -126,7 +143,9 @@ import java.io.FileWriter;
      }
 
 
-     private static ArrayList<AccountSetup> readAccountsFromFile() {
+
+
+   private static ArrayList<AccountSetup> readAccountsFromFile() {
       ArrayList<AccountSetup> accountList = new ArrayList<>();
       try {
           Scanner scanner = new Scanner(new File("accounts.txt"));
@@ -158,6 +177,11 @@ import java.io.FileWriter;
           e.printStackTrace();
       }
   }
+
+
+  public void setEmail(String email) {
+   this.email = email;
+}
   private String getEmail() {
    return email;
 }
