@@ -41,7 +41,32 @@ public class ServiceDesk {
 		
 	}
 
+	// creation of an account staff members only technicians are already coded into system
 	private void setUp() {
+		this.scan = new Scanner(System.in);
+		String email;
+		String name;
+		int phoneNumber;
+		String password;
+		System.out.print("Please enter Email adress\n");
+		email = scan.nextLine();
+		//validation needed and match from file
+		System.out.print("Please enter Full name\n");
+		name = scan.nextLine();
+		//possle need more validation
+		while (name.isBlank()) {
+			System.out.println("Must enter name, Please enter first name:");
+			name = scan.nextLine();
+		}
+		System.out.print("Please enter Phone Number\n");
+		phoneNumber = Integer.parseInt(scan.nextLine());
+		//validation needed for phone number entry
+		System.out.print("Please enter Password\n");
+		password = scan.nextLine();
+		//validation needed for password requirements min 20 char with mix of characters
+		String values[] = {email , name , Integer.toString(phoneNumber) , password};
+		be.createNewUser(values);
+		loginMenu();
 		// TODO Auto-generated method stub
 		
 	}
