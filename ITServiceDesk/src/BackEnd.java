@@ -11,6 +11,7 @@ public class BackEnd {
 
 	private int userCount = 0;
 	List<Users> users = new ArrayList<>();
+	List<Users> currentUser = new ArrayList<>();
 
 	public List<Users> load(String savefile) {
 		// load the details out of the txt file
@@ -53,6 +54,53 @@ public class BackEnd {
 		int phone = Integer.parseInt(values[2]);
 		String password = values[3];// TODO Auto-generated method stub
 		return new Users(email, name, phone, password);
+
+	}
+
+	public boolean searchUser(String email) {
+		currentUser.clear();
+		boolean found = false;
+		for (Users x : users) {
+			if (x.getEmail().matches(email)) {
+				currentUser.add(x);
+				found = true;
+			}
+		}
+		if (found) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public String getPass(String email) {
+		currentUser.clear();
+		String pass = null;
+		for (Users x : users) {
+			if (x.getEmail().matches(email)) {
+				currentUser.add(x);
+				pass = x.getPassword();
+			}
+		}
+		return pass;
+	}
+
+	public boolean validatePass(String user, String pass) {
+		currentUser.clear();
+		boolean found = false;
+		for (Users x : users) {
+			if (x.getEmail().matches(user)) {
+				currentUser.add(x);
+				if (x.getPassword().matches(pass)) {
+					found = true;
+				}
+			}
+		}
+		if (found) {
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 }
