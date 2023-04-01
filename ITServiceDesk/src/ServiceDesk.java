@@ -51,10 +51,15 @@ public class ServiceDesk {
 		user = scan.nextLine();
 		try {
 			if (be.searchUser(user)) {
-				System.out.println("Your password is: " + be.getPass(user));
-				loginMenu();
+				if (be.checkStatus() == 1){
+					System.out.println("Your password is: " + be.getPass(user));
+					loginMenu();
+				}else if (be.checkStatus() == 2) {
+					System.out.println("Your password is: " + be.getPassTwo(user));
+					loginMenu();
+				}
+				
 			}
-
 		} catch (Exception e) {
 			System.out.println("invalid user email");
 			loginMenu();
@@ -70,20 +75,20 @@ public class ServiceDesk {
 		String name;
 		int phoneNumber;
 		String password;
-		System.out.println("Please enter Email adress\n");
+		System.out.println("Please enter Email adress");
 		email = scan.nextLine();
 		// validation needed and match from file
-		System.out.println("Please enter Full name\n");
+		System.out.println("Please enter Full name");
 		name = scan.nextLine();
 		// possle need more validation
 		while (name.isBlank()) {
 			System.out.println("Must enter name, Please enter first name:");
 			name = scan.nextLine();
 		}
-		System.out.print("Please enter Phone Number\n");
+		System.out.println("Please enter Phone Number");
 		phoneNumber = Integer.parseInt(scan.nextLine());
 		// validation needed for phone number entry
-		System.out.print("Please enter Password\n");
+		System.out.println("Please enter Password");
 		password = scan.nextLine();
 		// validation needed for password requirements min 20 char with mix of
 		// characters
@@ -101,22 +106,38 @@ public class ServiceDesk {
 		System.out.println("Please enter email address");
 		user = scan.nextLine();
 		try {
-			if (be.searchUser(user)) {
+			if (be.validateUser(user)) {
 				System.out.println("Please enter password");
 				pass = scan.nextLine();
 				try {
-					if (be.validatePass(user, pass)) {
+					if (be.validatePass(pass)) {
 						staffMenu();
-						// need to add in tech/staff redirect
+					} else {
+						System.out.println("incorrect password!");
+						loginMenu();
 					}
 				} catch (Exception e) {
-					System.out.println("incorrect password!");
+					System.out.println("error has occured");
 					loginMenu();
 				}
-
+			} else if (be.validateTech(user)) {
+				System.out.println("Please enter password");
+				pass = scan.nextLine();
+				try {
+					if (be.validatePassTech(pass)) {
+						techMenu();
+					} else {
+						System.out.println("incorrect password!");
+						loginMenu();
+					}
+				} catch (Exception e) {
+					System.out.println("error has occured");
+					loginMenu();
+				}
 			}
+
 		} catch (Exception e) {
-			System.out.println("invalid user email");
+			System.out.println("error has occured");
 			loginMenu();
 		}
 

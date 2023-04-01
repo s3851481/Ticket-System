@@ -6,7 +6,6 @@ public class Users {
 	private String password;
 	
 	public Users(String email, String fullName, int phoneNum, String password) {
-		super();
 		this.email = email;
 		this.fullName = fullName;
 		this.phoneNum = phoneNum;
