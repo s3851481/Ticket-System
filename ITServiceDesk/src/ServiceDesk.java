@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class ServiceDesk {
 
 	private String savefile = "users.txt";
+	private String savedTickets = "tickets.txt";
 	BackEnd be;
 	private Scanner scan;
 
@@ -10,6 +11,7 @@ public class ServiceDesk {
 	public ServiceDesk(BackEnd backEnd) {
 		be = backEnd;
 		be.load(savefile);
+		be.loadTickets(savedTickets);
 		System.out.println("Welcome to IT service desk");
 		loginMenu();
 	}
@@ -51,14 +53,14 @@ public class ServiceDesk {
 		user = scan.nextLine();
 		try {
 			if (be.searchUser(user)) {
-				if (be.checkStatus() == 1){
+				if (be.checkStatus() == 1) {
 					System.out.println("Your password is: " + be.getPass(user));
 					loginMenu();
-				}else if (be.checkStatus() == 2) {
+				} else if (be.checkStatus() == 2) {
 					System.out.println("Your password is: " + be.getPassTwo(user));
 					loginMenu();
 				}
-				
+
 			}
 		} catch (Exception e) {
 			System.out.println("invalid user email");
@@ -186,8 +188,24 @@ public class ServiceDesk {
 	}
 
 	private void ticketCreation() {
-		System.out.println("service not currently available");
-		loginMenu();
+		String discription;
+		int severity;
+		this.scan = new Scanner(System.in);
+		System.out.println("Please describe IT ticket");
+		discription = scan.nextLine();
+		System.out.println("Please enter severity:\n1.low\n2.medium\n3.high");
+		try {
+			severity = Integer.parseInt(scan.nextLine());
+			while (severity < 1 || severity > 3) {
+				System.out.println("Please enter valid input");
+				severity = Integer.parseInt(scan.nextLine());
+			}
+			be.createTicket(discription, severity);
+		} catch (Exception e) {
+			System.out.println("Was not valid input");
+			ticketCreation();
+		}
+		staffMenu();
 
 	}
 
