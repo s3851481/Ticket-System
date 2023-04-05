@@ -159,6 +159,9 @@ public class ServiceDesk {
                 pass = scan.nextLine();
                 try {
                     if (be.validatePass(pass) && be.currentUser.getType() == userType.Staff) {
+                        /*
+                            TODO We should prompt the user to enter security questions if there aren't any.
+                         */
                         staffMenu();
                     } else {
                         System.out.println("incorrect password!");
