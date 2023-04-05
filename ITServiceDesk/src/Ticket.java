@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Ticket {
+public class Ticket implements Serializable {
 private String description;
 private int severity;
 private String creator;

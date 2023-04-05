@@ -1,6 +1,0 @@
-1,1,1,1
-2,2,2,2
-tech,tech,455556,tech,2,1
-4,4,4,4
-tech2,tech2,546,tech2,1,1
-tech3,tech3,000,tech3,1,0

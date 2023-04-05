@@ -1,15 +1,21 @@
+import java.io.Serializable;
+import java.util.Hashtable;
 
-public class Users {
+public class Users implements Serializable {
 	private String email;
 	private String fullName;
-	private int phoneNum;
+	private String phoneNum;
 	private String password;
+	private userType type;
+	private Hashtable<String, String> securityQuestions = new Hashtable<>();
 	
-	public Users(String email, String fullName, int phoneNum, String password) {
-		this.email = email;
-		this.fullName = fullName;
-		this.phoneNum = phoneNum;
-		this.password = password;
+	public Users(String email, String fullName, String phoneNum, String password, userType type, Hashtable<String,String> securityQuestions) {
+		this.setEmail(email);
+		this.setFullName(fullName);
+		this.setPhoneNum(phoneNum);
+		this.setPassword(password);
+		this.setType(type);
+		this.setSecurityQuestions(securityQuestions);
 	}
 
 	public String getEmail() {
@@ -20,7 +26,7 @@ public class Users {
 		return fullName;
 	}
 
-	public int getPhoneNum() {
+	public String getPhoneNum() {
 		return phoneNum;
 	}
 
@@ -36,13 +42,26 @@ public class Users {
 		this.fullName = fullName;
 	}
 
-	public void setPhoneNum(int phoneNum) {
+	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
+
+	public userType getType() {
+		return type;
+	}
+
+	public void setType(userType type) {
+		this.type = type;
+	}
+	public Hashtable<String, String> getSecurityQuestions() {
+		return securityQuestions;
+	}
+
+	public void setSecurityQuestions(Hashtable<String, String> securityQuestions) {
+		this.securityQuestions = securityQuestions;
+	}
 }

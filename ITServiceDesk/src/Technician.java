@@ -1,12 +1,14 @@
+import java.io.Serializable;
+import java.util.Hashtable;
 
-public class Technician extends Users {
+public class Technician extends Users implements Serializable {
 	private int techLvl;
 	private int ticketsOpen;
 
-	public Technician(String email, String fullName, int phoneNum, String password, int techLvl, int ticketsOpen) {
-		super(email, fullName, phoneNum, password);
-		this.techLvl = techLvl;
-		this.ticketsOpen = ticketsOpen;
+	public Technician(String email, String fullName, String phoneNum, String password, userType type, Hashtable<String, String> securityQuestions, int techLvl, int ticketsOpen) {
+		super(email, fullName, phoneNum, password, type,securityQuestions);
+		setTechLvl(techLvl);
+		setTicketsOpen(ticketsOpen);
 	}
 
 	public int getTechLvl() {
