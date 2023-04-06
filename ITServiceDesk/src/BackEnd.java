@@ -292,17 +292,12 @@ public class BackEnd {
                 int random = (int) Math.floor(Math.random() * (size - 1 + 1) + 1);
                 tempTech = tempUseTwo.get(random - 1);
                 tech = tempTech.getEmail();
-                //createStringValidate(tempTech);
-                //updateListTech(tempTech);
-
             }
+
             // If there is only one technician with the lowest assign tickets, assign that technician
             else if (tempUseTwo.size() == 1) {
                 tempTech = tempUseTwo.get(0);
                 tech = tempTech.getEmail();
-                //createStringValidate(tempTech);
-                //updateListTech(tempTech);
-
             }
         } else if (x == 3) {
             // Get the list of technicians who can handle severity 3 tickets
@@ -340,15 +335,11 @@ public class BackEnd {
                 int random = (int) Math.floor(Math.random() * (size - 1 + 1) + 1);
                 tempTech = tempUseTwo.get(random - 1);
                 tech = tempTech.getEmail();
-                //createStringValidate(tempTech);
-                //updateListTech(tempTech);
             }
             // If there is only one technician with the lowest assign tickets, assign that technician
             else if (tempUseTwo.size() == 1) {
                 tempTech = tempUseTwo.get(0);
                 tech = tempTech.getEmail();
-                createStringValidate(tempTech);
-                updateListTech(tempTech);
             }
         }
         return tech;
