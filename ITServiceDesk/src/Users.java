@@ -6,7 +6,7 @@ public class Users implements Serializable {
 	private String fullName;
 	private String phoneNum;
 	private String password;
-	private userType type;
+	private userType userType;
 	private Hashtable<String, String> securityQuestions = new Hashtable<>();
 	
 	public Users(String email, String fullName, String phoneNum, String password, userType type, Hashtable<String,String> securityQuestions) {
@@ -14,7 +14,7 @@ public class Users implements Serializable {
 		this.setFullName(fullName);
 		this.setPhoneNum(phoneNum);
 		this.setPassword(password);
-		this.setType(type);
+		this.setUserType(type);
 		this.setSecurityQuestions(securityQuestions);
 	}
 
@@ -50,12 +50,12 @@ public class Users implements Serializable {
 		this.password = password;
 	}
 
-	public userType getType() {
-		return type;
+	public userType getUserType() {
+		return userType;
 	}
 
-	public void setType(userType type) {
-		this.type = type;
+	public void setUserType(userType userType) {
+		this.userType = userType;
 	}
 	public Hashtable<String, String> getSecurityQuestions() {
 		return securityQuestions;
@@ -64,4 +64,6 @@ public class Users implements Serializable {
 	public void setSecurityQuestions(Hashtable<String, String> securityQuestions) {
 		this.securityQuestions = securityQuestions;
 	}
+
+
 }

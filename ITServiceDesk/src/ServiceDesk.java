@@ -158,40 +158,34 @@ public class ServiceDesk {
                 System.out.println("Please enter password");
                 pass = scan.nextLine();
                 try {
-                    if (be.validatePass(pass) && be.currentUser.getType() == userType.Staff) {
-                        /*
-                            TODO We should prompt the user to enter security questions if there aren't any.
-                         */
-                        staffMenu();
+                    if (be.validatePass(pass)) {
+                        if (be.currentUser.getSecurityQuestions() == null) {
+                            System.out.println("We noticed you do not have any security questions in case you" +
+                                    "you forget your password? Would you like to record some now? (Y/N)");
+                            String response = scan.nextLine();
+                            if (response == "Y") {
+                                recordSecurityQuestions();
+                            }
+                        }
+                        if (be.currentUser.getUserType() == userType.Staff) {
+                            staffMenu();
+                        } else if (be.currentUser.getUserType() == userType.Level1Tech || be.currentUser.getUserType() == userType.Level2Tech) {
+                            techMenu();
+                        }
                     } else {
                         System.out.println("incorrect password!");
                         loginMenu();
                     }
-                } catch (Exception e) {
-                    System.out.println("error has occured");
-                    loginMenu();
-                }
-            } else if (be.validateTech(user)) {
-                System.out.println("Please enter password");
-                pass = scan.nextLine();
-                try {
-                    if (be.validatePassTech(pass) && be.currentUser.getType() != userType.Staff) {
-                        techMenu();
-                    } else {
-                        System.out.println("incorrect password!");
-                        loginMenu();
-                    }
+
                 } catch (Exception e) {
                     System.out.println("error has occured");
                     loginMenu();
                 }
             }
-
         } catch (Exception e) {
             System.out.println("error has occured");
             loginMenu();
         }
-
     }
 
     private void staffMenu() {
@@ -237,11 +231,11 @@ public class ServiceDesk {
     }
 
     private void ticketCreation() {
-        String discription;
+        String description;
         int severity;
         this.scan = new Scanner(System.in);
         System.out.println("Please describe IT ticket");
-        discription = scan.nextLine();
+        description = scan.nextLine();
         System.out.println("Please enter severity:\n1.low\n2.medium\n3.high");
         try {
             severity = Integer.parseInt(scan.nextLine());
@@ -249,7 +243,7 @@ public class ServiceDesk {
                 System.out.println("Please enter valid input");
                 severity = Integer.parseInt(scan.nextLine());
             }
-            be.createTicket(discription, severity);
+            be.createTicket(description, severity);
             be.persistTickets(savedTickets);
         } catch (Exception e) {
             System.out.println("Was not valid input");

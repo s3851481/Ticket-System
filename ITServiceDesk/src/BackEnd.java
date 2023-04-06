@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.io.FileOutputStream;
@@ -16,12 +17,12 @@ public class BackEnd {
     List<Users> users = new ArrayList<>();
     List<Technician> techs = new ArrayList<>();
     List<Ticket> tickets = new ArrayList<>();
-    List<Technician> tempUse = new ArrayList<>();
-    List<Technician> tempUseTwo = new ArrayList<>();
+    List<Users> tempUse = new ArrayList<>();
+    List<Users> tempUseTwo = new ArrayList<>();
     String validate;
     Users currentUser = null;
-    Technician currentTech = null;
-    Technician tempTech = null;
+    Users currentTech = null;
+    Users tempTech = null;
 
     private void initializeTechnicians() {
         Users tech1 = new Users("harry.styles@cinco.com", "Harry Styles", "0356781000", "Password1", userType.Level1Tech, null);
@@ -84,17 +85,17 @@ public class BackEnd {
         File ticketsFile = new File(savedTickets);
         FileInputStream fis;
         ObjectInputStream ois;
-        List<Ticket> tickets = null;
+        List<Ticket> currentTickets = new ArrayList<Ticket>();
         if (ticketsFile.exists()) {
             try {
                 fis = new FileInputStream(savedTickets);
                 ois = new ObjectInputStream(fis);
-                tickets = (ArrayList<Ticket>) ois.readObject();
+                currentTickets = (ArrayList<Ticket>) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
-        this.tickets = tickets;
+        this.tickets = currentTickets;
         return tickets;
     }
 
@@ -186,34 +187,6 @@ public class BackEnd {
         }
     }
 
-    public boolean validateTech(String email) {
-        currentTech = null;
-        boolean found = false;
-        for (Technician x : techs) {
-            if (x.getEmail().matches(email)) {
-                currentTech = x;
-                found = true;
-            }
-        }
-        if (found) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean validatePassTech(String pass) {
-        boolean found = false;
-        if (currentTech.getPassword().matches(pass)) {
-            found = true;
-        }
-        if (found) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public int checkStatus() {
         int x = 0;
         if (currentUser != null) {
@@ -225,16 +198,16 @@ public class BackEnd {
 
     }
 
-    public Ticket createTicket(String discription, int severity) {
+    public Ticket createTicket(String description, int severity) {
         String creator = currentUser.getEmail();
         int status = 1;
         String assignedTech = assignTicket(severity);
-        tickets.add(new Ticket(discription, severity, creator, assignedTech, status));
-        return new Ticket(discription, severity, creator, assignedTech, status);
+        Ticket newTicket = new Ticket(description, severity, creator, assignedTech, status);
+        this.tickets.add(newTicket);
+        return newTicket;
     }
 
     public void persistTickets(String savedTickets) {
-        File ticketsFile = new File(savedTickets);
         FileOutputStream fos;
         ObjectOutputStream oos;
         try {
@@ -251,44 +224,80 @@ public class BackEnd {
         }
     }
 
-    private void createStringValidate(Technician tech) {
+    private void createStringValidate(Users tech) {
+        HashMap<String, Integer> ticketCounts = getAssignedTicketCount();
         validate = tech.getEmail() + "," + tech.getFullName() + "," + tech.getPhoneNum() + "," + tech.getPassword()
-                + "," + tech.getTechLvl() + "," + tech.getTicketsOpen();
+                + "," + tech.getUserType().toString() + "," + ticketCounts.get(tech.getEmail());
         System.out.println("this is what validate is :" + validate);
+    }
+
+    private HashMap<String, Integer> getAssignedTicketCount() {
+        HashMap<String, Integer> ticketCounts = new HashMap<String, Integer>();
+        if (this.tickets == null) {
+            return ticketCounts;
+        } else {
+            for (Ticket x : tickets) {
+                if (ticketCounts.containsKey(x.getAssignedTech())) {
+                    ticketCounts.put(x.getAssignedTech(), ticketCounts.get(x.getAssignedTech() + 1));
+                } else {
+                    // First time we have found a ticket for that user
+                    ticketCounts.put(x.getAssignedTech(), 1);
+                }
+            }
+        }
+        return ticketCounts;
     }
 
     private String assignTicket(int x) {
         tempUse.clear();
         tempUseTwo.clear();
-        String tech = null;
-        int tickets = 0;
+        String tech = null;        int tickets = 0;
         int low = 100;
+        HashMap<String, Integer> ticketCounts = this.getAssignedTicketCount();
+
         if (x == 1 || x == 2) {
-            for (Technician y : techs) {
-                if (y.getTechLvl() == 1) {
+            // Get the list of technicians who can handle severity 1 or 2 tickets
+            for (Users y : users) {
+                if (y.getUserType() == userType.Level1Tech) {
                     tempUse.add(y);
                 }
             }
-            for (Technician z : tempUse) {
-                tickets = z.getTicketsOpen();
+
+            for (Users z : tempUse) {
+                // Check if there is an entry in ticketCounts for the technician, otherwise assign 0 tickets
+                if (ticketCounts.containsKey(z.getEmail())) {
+                    tickets = ticketCounts.get(z.getEmail());
+                } else {
+                    tickets = 0;
+                }
                 if (tickets <= low) {
                     low = tickets;
                 }
             }
-            for (Technician a : tempUse) {
-                if (a.getTicketsOpen() == low) {
+            for (Users a : tempUse) {
+                // Check if there is an entry in ticketCounts for the technician, otherwise assign 0 tickets
+                if (ticketCounts.containsKey(a.getEmail())) {
+                    tickets = ticketCounts.get(a.getEmail());
+                } else {
+                    tickets = 0;
+                }
+                if (tickets == low) {
                     tempUseTwo.add(a);
                 }
             }
+
+            // All techs have the same count so randomly assign a technician
             if (tempUseTwo.size() > 1) {
                 int size = tempUseTwo.size();
                 int random = (int) Math.floor(Math.random() * (size - 1 + 1) + 1);
                 tempTech = tempUseTwo.get(random - 1);
                 tech = tempTech.getEmail();
-                createStringValidate(tempTech);
-                updateListTech(tempTech);
+                //createStringValidate(tempTech);
+                //updateListTech(tempTech);
 
-            } else if (tempUseTwo.size() == 1) {
+            }
+            // If there is only one technician with the lowest assign tickets, assign that technician
+            else if (tempUseTwo.size() == 1) {
                 tempTech = tempUseTwo.get(0);
                 tech = tempTech.getEmail();
                 createStringValidate(tempTech);
@@ -296,46 +305,69 @@ public class BackEnd {
 
             }
         } else if (x == 3) {
-            for (Technician y : techs) {
-                if (y.getTechLvl() == 2) {
+            // Get the list of technicians who can handle severity 3 tickets
+            for (Users y : users) {
+                if (y.getUserType() == userType.Level2Tech) {
                     tempUse.add(y);
                 }
             }
-            for (Technician z : tempUse) {
-                tickets = z.getTicketsOpen();
+            for (Users z : tempUse) {
+                // Check if there is an entry in ticketCounts for the technician, otherwise assign 0 tickets
+                if (ticketCounts.containsKey(z.getEmail())) {
+                    tickets = ticketCounts.get(z.getEmail());
+                } else {
+                    tickets = 0;
+                }
                 if (tickets <= low) {
                     low = tickets;
                 }
             }
-            for (Technician a : tempUse) {
-                if (a.getTicketsOpen() == low) {
+            for (Users a : tempUse) {
+                // Check if there is an entry in ticketCounts for the technician, otherwise assign 0 tickets
+                if (ticketCounts.containsKey(a.getEmail())) {
+                    tickets = ticketCounts.get(a.getEmail());
+                } else {
+                    tickets = 0;
+                }
+                if (tickets == low) {
                     tempUseTwo.add(a);
                 }
             }
+
+            // All techs have the same count so randomly assign a technician
             if (tempUseTwo.size() > 1) {
                 int size = tempUseTwo.size();
                 int random = (int) Math.floor(Math.random() * (size - 1 + 1) + 1);
                 tempTech = tempUseTwo.get(random - 1);
                 tech = tempTech.getEmail();
-                createStringValidate(tempTech);
-                updateListTech(tempTech);
-            } else if (tempUseTwo.size() == 1) {
+                //createStringValidate(tempTech);
+                //updateListTech(tempTech);
+            }
+            // If there is only one technician with the lowest assign tickets, assign that technician
+            else if (tempUseTwo.size() == 1) {
                 tempTech = tempUseTwo.get(0);
                 tech = tempTech.getEmail();
                 createStringValidate(tempTech);
                 updateListTech(tempTech);
-
             }
-
         }
-
         return tech;
-
     }
 
-    private void updateListTech(Technician tempTech2) {
+    private ArrayList<Users> getTechnicians() {
+        ArrayList<Users> techs = new ArrayList<Users>();
+        for (Users x : this.users) {
+            if (x.getUserType() == userType.Level1Tech || x.getUserType() == userType.Level2Tech) {
+                techs.add(x);
+            }
+        }
+        return techs;
+    }
+
+    private void updateListTech(Users tempTech2) {
+        HashMap<String, Integer> ticketCounts = getAssignedTicketCount();
         int element = 0;
-        int tickets = tempTech2.getTicketsOpen();
+        int tickets = ticketCounts.get(tempTech2.getEmail());
         for (Technician x : techs) {
             if (x.getEmail() == tempTech2.getEmail()) {
                 tickets = tickets + 1;
@@ -351,7 +383,7 @@ public class BackEnd {
     }
 
     private void updateTxtTechs() {
-
+        HashMap<String, Integer> ticketCounts = getAssignedTicketCount();
         try (FileWriter f = new FileWriter("users2.txt");
              BufferedWriter b = new BufferedWriter(f);
              PrintWriter p = new PrintWriter(b);
@@ -361,7 +393,7 @@ public class BackEnd {
                 if (line.contentEquals(validate)) {
                     System.out.println("we have a match");
                     line = tempTech.getEmail() + "," + tempTech.getFullName() + "," + tempTech.getPhoneNum() + ","
-                            + tempTech.getPassword() + "," + tempTech.getTechLvl() + "," + tempTech.getTicketsOpen();
+                            + tempTech.getPassword() + "," + tempTech.getUserType().toString() + "," + ticketCounts.get(tempTech.getEmail());
                 }
                 p.println(line);
             }
