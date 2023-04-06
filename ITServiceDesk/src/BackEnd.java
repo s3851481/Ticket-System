@@ -26,7 +26,7 @@ public class BackEnd {
 
     private void initializeTechnicians() {
         Users tech1 = new Users("harry.styles@cinco.com", "Harry Styles", "0356781000", "Password1", userType.Level1Tech, null);
-        Users tech2 = new Users("niall,horan@cinco.com", "Niall Horan", "0356781001", "Password1", userType.Level1Tech, null);
+        Users tech2 = new Users("niall.horan@cinco.com", "Niall Horan", "0356781001", "Password1", userType.Level1Tech, null);
         Users tech3 = new Users("Liam.Payne@cinco.com", "Liam Payne", "0356781002", "Password1", userType.Level1Tech, null);
         Users tech4 = new Users("Louis.Tomlinson@cinco.com", "Louis Tomlinson", "0356781003", "Password1", userType.Level2Tech, null);
         Users tech5 = new Users("Zayn.Malik@cinco.com", "Zayn Tomlinson", "0356781004", "Password1", userType.Level2Tech, null);
@@ -300,8 +300,8 @@ public class BackEnd {
             else if (tempUseTwo.size() == 1) {
                 tempTech = tempUseTwo.get(0);
                 tech = tempTech.getEmail();
-                createStringValidate(tempTech);
-                updateListTech(tempTech);
+                //createStringValidate(tempTech);
+                //updateListTech(tempTech);
 
             }
         } else if (x == 3) {
