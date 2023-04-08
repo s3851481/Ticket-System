@@ -14,21 +14,21 @@ Setup and import:
 
 2. Close the welcome message by clicking the x on the top left.
 
-2. Create a new project by selecting "File" > "New" > "Java Project". ----<
+3. Create a new project by selecting "File" > "New" > "Java Project". 
 
-2. Name the project and select a default JRE version, then click Finish. ----<
+4. Name the project and select a default JRE version, then click Finish.
 
-3. Select "File" > "Import".
+5. Select "File" > "Import".
 
-4. Double click on "General", then double click "Existing Projects into Workplace".
+6. Double click on "General", then double click "Existing Projects into Workplace".
 
-5. Select the radio button for "Select archive file:", then click on "Browse". Find the .zip file that you have downloaded ITServiceDesk.zip . Click "Open". Click "Finish".
+7. Select the radio button for "Select archive file:", then click on "Browse". Find the .zip file that you have downloaded ITServiceDesk.zip . Click "Open". Click "Finish".
 
-6. Once the file is imported, right-click on it in the Package Explorer and select "Run As" > "Java Application".
+8. Once the file is imported, right-click on it in the Package Explorer and select "Run As" > "Java Application".
 
-7. If the program requires any command-line arguments, you can specify them in the "Run Configurations" dialogue.
+9. If the program requires any command-line arguments, you can specify them in the "Run Configurations" dialogue.
 
-8. Click "Run" to execute the program. 
+10. Click "Run" to execute the program. 
 
 Alternatively, you can also create a new "Run Configuration" by selecting "Run" > "Run Configurations" and then selecting "Java Application". From there, you can specify the project and main class to run.
  
