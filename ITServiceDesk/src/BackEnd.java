@@ -27,9 +27,9 @@ public class BackEnd {
     private void initializeTechnicians() {
         Users tech1 = new Users("harry.styles@cinco.com", "Harry Styles", "0356781000", "Password1", userType.Level1Tech, null);
         Users tech2 = new Users("niall.horan@cinco.com", "Niall Horan", "0356781001", "Password1", userType.Level1Tech, null);
-        Users tech3 = new Users("Liam.Payne@cinco.com", "Liam Payne", "0356781002", "Password1", userType.Level1Tech, null);
-        Users tech4 = new Users("Louis.Tomlinson@cinco.com", "Louis Tomlinson", "0356781003", "Password1", userType.Level2Tech, null);
-        Users tech5 = new Users("Zayn.Malik@cinco.com", "Zayn Tomlinson", "0356781004", "Password1", userType.Level2Tech, null);
+        Users tech3 = new Users("liam.payne@cinco.com", "Liam Payne", "0356781002", "Password1", userType.Level1Tech, null);
+        Users tech4 = new Users("louis.tomlinson@cinco.com", "Louis Tomlinson", "0356781003", "Password1", userType.Level2Tech, null);
+        Users tech5 = new Users("zayn.malik@cinco.com", "Zayn Tomlinson", "0356781004", "Password1", userType.Level2Tech, null);
         this.users.add(tech1);
         this.users.add(tech2);
         this.users.add(tech3);
@@ -39,24 +39,23 @@ public class BackEnd {
 
     public void load(String savefile) {
         File userFile = new File(savefile);
-        FileOutputStream fos;
-        ObjectOutputStream oos;
-        FileInputStream fis;
-        ObjectInputStream ois;
-        List<Users> users = null;
+        List<Users> users = new ArrayList<>();
         if (userFile.exists()) {
             try {
-                fis = new FileInputStream(savefile);
-                ois = new ObjectInputStream(fis);
+                FileInputStream fis = new FileInputStream(savefile);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream ois = new ObjectInputStream(bis);
                 users = (ArrayList<Users>) ois.readObject();
+                this.users = users;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
             this.initializeTechnicians();
             try {
-                fos = new FileOutputStream(savefile);
-                oos = new ObjectOutputStream(fos);
+                FileOutputStream fos = new FileOutputStream(savefile);
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
                 oos.writeObject(this.users);
                 oos.flush();
                 oos.close();
@@ -64,15 +63,13 @@ public class BackEnd {
                 e.printStackTrace();
             }
         }
-        this.users = users;
     }
 
     public void persistUsers(String savefile) {
-        FileOutputStream fos;
-        ObjectOutputStream oos;
         try {
-            fos = new FileOutputStream(savefile);
-            oos = new ObjectOutputStream(fos);
+            FileOutputStream fos = new FileOutputStream(savefile);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(this.users);
             oos.flush();
             oos.close();
@@ -83,13 +80,12 @@ public class BackEnd {
 
     public List<Ticket> loadTickets(String savedTickets) {
         File ticketsFile = new File(savedTickets);
-        FileInputStream fis;
-        ObjectInputStream ois;
         List<Ticket> currentTickets = new ArrayList<Ticket>();
         if (ticketsFile.exists()) {
             try {
-                fis = new FileInputStream(savedTickets);
-                ois = new ObjectInputStream(fis);
+                FileInputStream fis = new FileInputStream(savedTickets);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                ObjectInputStream ois = new ObjectInputStream(bis);
                 currentTickets = (ArrayList<Ticket>) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
