@@ -130,7 +130,7 @@ public class ServiceDesk {
 		name = scan.nextLine();
 		// possible need more validation
 		while (name.isBlank()) {
-			System.out.println("Must enter name, Please enter first name:");
+			System.out.println("Must enter name, Please enter name:");
 			name = scan.nextLine();
 		}
 		System.out.println("Please enter Australian Phone Number");
@@ -143,8 +143,16 @@ public class ServiceDesk {
 			ausPhone = phone.matcher(phoneNumber);
 		}
 		// validation needed for phone number entry
-		System.out.println("Please enter Password");
+		System.out.println("Please enter Password minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
 		password = scan.nextLine();
+		// 20 minimum length 30 maximum at least 1 lower and 1 upper comment out these lines for testing ease
+		Pattern pass = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{20,30}$");
+		Matcher longPass = pass.matcher(password);
+		while(!longPass.matches()) {
+			System.out.println("Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
+			password = scan.nextLine();
+			longPass = pass.matcher(password);
+		}
 		// validation needed for password requirements min 20 char with mix of
 		// characters
 		// String values[] = {email, name, Integer.toString(phoneNumber), password};
