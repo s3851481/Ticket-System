@@ -341,12 +341,6 @@ public class BackEnd {
 
 	}
 
-	public void printinfo() {
 
-		System.out.println("Your info:");
-		System.out.println("------------------------------------------------------");
-		System.out.println(currentUser.toString());
-
-	}
 
 }
