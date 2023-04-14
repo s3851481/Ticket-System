@@ -218,11 +218,10 @@ public class BackEnd {
 	}
 
 	public void persistTickets(String savedTickets) {
-		FileOutputStream fos;
-		ObjectOutputStream oos;
 		try {
-			fos = new FileOutputStream(savedTickets);
-			oos = new ObjectOutputStream(fos);
+			FileOutputStream fos = new FileOutputStream(savedTickets);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
 			oos.writeObject(this.tickets);
 			oos.flush();
 			oos.close();
@@ -440,6 +439,7 @@ public class BackEnd {
 			System.out.println(i + " : " + x);
 			i++;
 		}
+
 
 	}
 

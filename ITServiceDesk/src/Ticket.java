@@ -1,75 +1,82 @@
 import java.io.Serializable;
 
 public class Ticket implements Serializable {
-private String description;
-private int severity;
-private String creator;
-private String assignedTech;
-private int status;
+    private String description;
+    private int severity;
+    private String creator;
+    private String assignedTech;
+    private int status;
 
-public Ticket(String description, int severity, String creator, String assignedTech, int status) {
-	super();
-	this.description = description;
-	this.severity = severity;
-	this.creator = creator;
-	this.assignedTech = assignedTech;
-	this.status = status;
-}
+    public Ticket(String description, int severity, String creator, String assignedTech, int status) {
+        super();
+        this.description = description;
+        this.severity = severity;
+        this.creator = creator;
+        this.assignedTech = assignedTech;
+        this.status = status;
+    }
 
-public String getDescription() {
-	return description;
-}
+    public String getDescription() {
+        return description;
+    }
 
-public int getSeverity() {
-	return severity;
-}
+    public int getSeverity() {
+        return severity;
+    }
 
-public String getCreator() {
-	return creator;
-}
+    public String getCreator() {
+        return creator;
+    }
 
-public String getAssignedTech() {
-	return assignedTech;
-}
+    public String getAssignedTech() {
+        return assignedTech;
+    }
 
-public int getStatus() {
-	return status;
-}
+    public int getStatus() {
+        return status;
+    }
 
-public void setDescription(String description) {
-	this.description = description;
-}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-public void setSeverity(int severity) {
-	this.severity = severity;
-}
+    public void setSeverity(int severity) {
+        this.severity = severity;
+    }
 
-public void setCreator(String creator) {
-	this.creator = creator;
-}
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
 
-public void setAssignedTech(String assignedTech) {
-	this.assignedTech = assignedTech;
-}
+    public void setAssignedTech(String assignedTech) {
+        this.assignedTech = assignedTech;
+    }
 
-public void setStatus(int status) {
-	this.status = status;
-}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-@Override
-public String toString() {
-	String severityString = "error";
-	if (severity == 1) {
-		severityString = "Low";
-	}else if (severity == 2) {
-		severityString = "medium";
-	}else if(severity == 3) {
-		severityString = "High";
+    @Override
+    public String toString() {
+        String severityString = "error";
+        if (severity == 1) {
+            severityString = "Low";
+        } else if (severity == 2) {
+            severityString = "medium";
+        } else if (severity == 3) {
+            severityString = "High";
+        }
+        String statusString = "error";
+        if (status == 1) {
+            statusString = "Open";
+        }
+        return "" + description + " , " + severityString + " , " + statusString + " , " + assignedTech;
+    }
+
+	public void displayTicket() {
+		System.out.printf("%s %s \n", "Description: ", this.description);
+		System.out.printf("%s %s \n", "Created By: ", this.creator);
+		System.out.printf("%s %s \n", "Assigned Tech: ", this.assignedTech);
+		System.out.printf("%s %d %s %d \n", "Status: ", this.status, "Severity: ", this.severity);
 	}
-	String statusString ="error";
-	if (status == 1) {
-		statusString = "Open";
-	}
-	return "" + description + " , " + severityString + " , " + statusString +" , " +assignedTech;
-}
 }
