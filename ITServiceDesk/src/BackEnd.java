@@ -16,14 +16,13 @@ import java.io.ObjectOutputStream;
 public class BackEnd {
 
 	List<Users> users = new ArrayList<>();
-	List<Technician> techs = new ArrayList<>();
 	List<Ticket> tickets = new ArrayList<>();
 	List<Ticket> tempList = new ArrayList<>();
 	List<Users> tempUse = new ArrayList<>();
 	List<Users> tempUseTwo = new ArrayList<>();
 	String validate;
 	Users currentUser = null;
-	Users currentTech = null;
+
 	Users tempTech = null;
 
 	private void initializeTechnicians() {
@@ -103,12 +102,6 @@ public class BackEnd {
 
 	}
 
-	Technician loadTech(String[] values, userType type, Hashtable<String, String> securityQuestions) {
-		int techLvl = Integer.parseInt(values[4]);
-		int tickets = Integer.parseInt(values[5]);
-		return new Technician(values[0], values[1], values[2], values[3], type, securityQuestions, techLvl, tickets);
-	}
-
 	Users loadUser(String[] values, Hashtable<String, String> securityQuestions) {
 		return new Users(values[0], values[1], values[2], values[3], userType.Staff, securityQuestions);
 	}
@@ -120,45 +113,6 @@ public class BackEnd {
 		String assignedTech = values[3];
 		int status = Integer.parseInt(values[4]);
 		return new Ticket(description, severity, creator, assignedTech, status);
-	}
-
-	public boolean searchUser(String email) {
-		currentUser = null;
-		currentTech = null;
-		boolean found = false;
-		for (Users x : users) {
-			if (x.getEmail().matches(email)) {
-				currentUser = x;
-				found = true;
-			}
-		}
-		for (Technician x : techs) {
-			if (x.getEmail().matches(email)) {
-				currentTech = x;
-				found = true;
-			}
-		}
-		return found;
-	}
-
-	public String getPass(String email) {
-		String pass = null;
-		for (Users x : users) {
-			if (x.getEmail().matches(email)) {
-				pass = x.getPassword();
-			}
-		}
-		return pass;
-	}
-
-	public String getPassTwo(String email) {
-		String pass = null;
-		for (Technician x : techs) {
-			if (x.getEmail().matches(email)) {
-				pass = x.getPassword();
-			}
-		}
-		return pass;
 	}
 
 	public boolean validatePass(String pass) {
@@ -189,17 +143,6 @@ public class BackEnd {
 		} else {
 			return false;
 		}
-	}
-
-	public int checkStatus() {
-		int x = 0;
-		if (currentUser != null) {
-			x = 1;
-		} else if (currentTech != null) {
-			x = 2;
-		}
-		return x;
-
 	}
 
 	public Ticket createTicket(String description, int severity) {
@@ -233,21 +176,23 @@ public class BackEnd {
 		}
 	}
 
-	private void createStringValidate(Users tech) {
+	public void createStringValidate(Users tech) {
 		HashMap<String, Integer> ticketCounts = getAssignedTicketCount();
 		validate = tech.getEmail() + "," + tech.getFullName() + "," + tech.getPhoneNum() + "," + tech.getPassword()
-				+ "," + tech.getUserType().toString() + "," + ticketCounts.get(tech.getEmail());
+				+ "," + tech.getUserType().toString() + ",";
 		System.out.println("this is what validate is :" + validate);
 	}
 
 	private HashMap<String, Integer> getAssignedTicketCount() {
 		HashMap<String, Integer> ticketCounts = new HashMap<String, Integer>();
+
 		if (this.tickets == null) {
 			return ticketCounts;
 		} else {
 			for (Ticket x : tickets) {
 				if (ticketCounts.containsKey(x.getAssignedTech())) {
-					ticketCounts.put(x.getAssignedTech(), ticketCounts.get(x.getAssignedTech() + 1));
+					int count = ticketCounts.get(x.getAssignedTech());
+					ticketCounts.put(x.getAssignedTech(), count + 1);
 				} else {
 					// First time we have found a ticket for that user
 					ticketCounts.put(x.getAssignedTech(), 1);
@@ -371,57 +316,6 @@ public class BackEnd {
 		return techs;
 	}
 
-	private void updateListTech(Users tempTech2) {
-		HashMap<String, Integer> ticketCounts = getAssignedTicketCount();
-		int element = 0;
-		int tickets = ticketCounts.get(tempTech2.getEmail());
-		for (Technician x : techs) {
-			if (x.getEmail() == tempTech2.getEmail()) {
-				tickets = tickets + 1;
-				x.setTicketsOpen(tickets);
-				tempTech = x;
-				techs.set(element, x);
-				updateTxtTechs();
-				xfer();
-			}
-			element++;
-		}
-
-	}
-
-	private void updateTxtTechs() {
-		HashMap<String, Integer> ticketCounts = getAssignedTicketCount();
-		try (FileWriter f = new FileWriter("users2.txt");
-				BufferedWriter b = new BufferedWriter(f);
-				PrintWriter p = new PrintWriter(b);
-				BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.contentEquals(validate)) {
-					System.out.println("we have a match");
-					line = tempTech.getEmail() + "," + tempTech.getFullName() + "," + tempTech.getPhoneNum() + ","
-							+ tempTech.getPassword() + "," + tempTech.getUserType().toString() + ","
-							+ ticketCounts.get(tempTech.getEmail());
-				}
-				p.println(line);
-			}
-			// br.close();
-			// f.close();
-			// p.close();
-			// b.close();
-			// File base = new File("users.txt");
-			// File current = new File("users2.txt");
-			// boolean success = current.renameTo(base);
-
-			// if (!success) {
-			// System.out.println("file was not transfered");
-			// }
-		} catch (IOException e) {
-			System.out.println("File not found");
-
-		}
-	}
-
 	public void printTickets() {
 		tempList.clear();
 		int i = 1;
@@ -435,42 +329,18 @@ public class BackEnd {
 		}
 		System.out.println("Your tickets are as following:");
 		System.out.println("------------------------------------------------------");
-		for (Ticket x : tempList) {
-			System.out.println(i + " : " + x);
-			i++;
+		if (tempList.isEmpty()) {
+			System.out.println("No tickets");
+		} else {
+			for (Ticket x : tempList) {
+				System.out.println(i + " : " + x);
+				i++;
+			}
 		}
 
 
 	}
 
-	private void xfer() {
-		File base = new File("users.txt");
-		File current = new File("users2.txt");
-		boolean success = current.renameTo(base);
 
-		if (!success) {
-			System.out.println("file was not transfered");
-		}
 
-//		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("users.temp")));
-//
-//				BufferedReader br = new BufferedReader(new FileReader("users.txt"))) {
-//			String line;
-//			while ((line = br.readLine()) != null) {
-//				if (line.matches(validate)) {
-//					line.replaceAll(validate,
-//							tempTech.getEmail() + "," + tempTech.getFullName() + "," + tempTech.getPhoneNum() + ","
-//									+ tempTech.getPassword() + "," + tempTech.getTechLvl() + ","
-//									+ tempTech.getTicketsOpen());
-//				}
-//				writer.println(line);
-//			}
-//			File realName = new File("users.txt");
-//			realName.delete(); // remove the old file
-//			new File("users.temp").renameTo(realName); // Rename temp file
-//
-//		}
-//
-//	}
-	}
 }
