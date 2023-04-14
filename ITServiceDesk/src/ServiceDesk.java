@@ -364,7 +364,16 @@ public class ServiceDesk {
 	public void changeStatus(int ticketSelection) {
 		this.scan = new Scanner(System.in);
 		int statusSelection = 0;
-		System.out.println("The current status of this ticket is : " + be.tempList.get(ticketSelection).statusString()+"\n");
+		int ticketCurrent = be.tempList.get(ticketSelection).getStatus();
+		String statusString = null;
+		if (ticketCurrent == 1) {
+			statusString = "Open";
+		}else if (ticketCurrent == 2) {
+			statusString = "closed & resolved";
+		}else if (ticketCurrent == 3) {
+			statusString = "closed & unresolved";
+		}
+		System.out.println("The current status of this ticket is : " + statusString +"\n");
 		System.out.println("Please enter the new status of ticket or any other key to return to menu\n");
 		System.out.println("1 : Open");
 		System.out.println("2 : closed & resolved");
@@ -373,10 +382,16 @@ public class ServiceDesk {
 			statusSelection = Integer.parseInt(scan.nextLine());
 			if (statusSelection == 1) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
+				be.persistTickets(savefile);
+				techMenu();
 			} else if (statusSelection == 2) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
+				be.persistTickets(savefile);
+				techMenu();
 			} else if (statusSelection == 3) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
+				be.persistTickets(savefile);
+				techMenu();
 			} else  {
 				System.out.print("Return to menu");
 				techMenu();

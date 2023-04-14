@@ -55,18 +55,19 @@ public void setAssignedTech(String assignedTech) {
 public void setStatus(int status) {
 	this.status = status;
 }
-public String statusString() {
-	String statusString = null;
-	int status = this.status;
-	if (status == 1) {
-		statusString = "Open";
-	}else if (status == 2) {
-		statusString = "closed & resolved";
-	}else if (status == 3) {
-		statusString = "closed & unresolved";
-	}
-	return statusString;
-}
+
+//public String statusString() {
+//	String statusString = null;
+//	int statusy = this.status;
+//	if (statusy == 1) {
+//		statusString = "Open";
+//	}else if (statusy == 2) {
+//		statusString = "closed & resolved";
+//	}else if (statusy == 3) {
+//		statusString = "closed & unresolved";
+//	}
+//	return statusString;
+//}
 
 @Override
 public String toString() {
