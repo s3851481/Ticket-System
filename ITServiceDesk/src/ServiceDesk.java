@@ -274,7 +274,6 @@ public class ServiceDesk {
 		this.scan = new Scanner(System.in);
 		int menuSelection = 0;
 		String menu = "**Welcome technician here are you're available tickets please make a selection**\n";
-		be.createStringValidate(be.currentUser);
 		menu += "1: view tickets\n";
 		menu += "3: Exit\n";
 		System.out.println(menu);
