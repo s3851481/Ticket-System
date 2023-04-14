@@ -95,7 +95,7 @@ public class ServiceDesk {
 					scan.close();
 				}
 			}
-		}else {
+		} else {
 			System.out.println("Invalid username");
 			loginMenu();
 		}
@@ -122,7 +122,7 @@ public class ServiceDesk {
 			System.out.println("Email already in use");
 			setUp();
 		} else if( !matcher.matches()) {
-			System.out.println("invalid email address must contain @");
+			System.out.println("invalid email address must contain @ and be .com");
 			setUp();
 		}
 		// validation needed and match from file
@@ -133,10 +133,15 @@ public class ServiceDesk {
 			System.out.println("Must enter name, Please enter first name:");
 			name = scan.nextLine();
 		}
-		System.out.println("Please enter Phone Number");
-		// phoneNumber = Integer.parseInt(scan.nextLine()); // phoneNumber is no longer
-		// an int
+		System.out.println("Please enter Australian Phone Number");
 		phoneNumber = scan.nextLine();
+		Pattern phone = Pattern.compile("^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$");
+		Matcher ausPhone = phone.matcher(phoneNumber);
+		while(!ausPhone.matches()) {
+			System.out.println("Must be australia phone number");
+			phoneNumber = scan.nextLine();
+			ausPhone = phone.matcher(phoneNumber);
+		}
 		// validation needed for phone number entry
 		System.out.println("Please enter Password");
 		password = scan.nextLine();
@@ -257,10 +262,10 @@ public class ServiceDesk {
 		System.out.println("service not currently available");
 		loginMenu();
 	}
-	
+
 	private void viewTickets() {
 		be.printTickets();
-		
+
 	}
 
 	private void ticketCreation() {
