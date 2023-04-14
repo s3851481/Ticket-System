@@ -1,6 +1,8 @@
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ServiceDesk {
 
@@ -109,6 +111,20 @@ public class ServiceDesk {
 		String password;
 		System.out.println("Please enter Email adress");
 		email = scan.nextLine();
+		while (email.isBlank()) {
+			System.out.println("Must enter email");
+			email = scan.nextLine();
+		}
+		Pattern pattern = Pattern.compile("\\S+?@\\S+?\\.com");
+		Matcher matcher = pattern.matcher(email);
+		//check if user exists
+		if(be.userExists(email) ) {
+			System.out.println("Email already in use");
+			setUp();
+		} else if( !matcher.matches()) {
+			System.out.println("invalid email address must contain @");
+			setUp();
+		}
 		// validation needed and match from file
 		System.out.println("Please enter Full name");
 		name = scan.nextLine();
