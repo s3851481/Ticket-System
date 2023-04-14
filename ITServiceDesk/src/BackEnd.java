@@ -355,4 +355,48 @@ public class BackEnd {
 
 	}
 
+	public boolean confirmSelection(int x) {
+		int j = x - 1;
+		boolean found = false;
+		if (j < tempList.size() || j == tempList.size()) {
+			found = true;
+		}
+		if (found) {
+			return true;
+		} else {
+
+			return false;
+		}
+
+		
+	}
+
+	public void changeTicketStatus(int ticketSelection, int statusSelection) {
+		for(Ticket x : tickets) {
+			if (tempList.get(ticketSelection-1).equals(x)) {
+				x.setStatus(statusSelection);
+			}
+		}
+		
+
+	
+	}
+
+	public void changeTicketSeverityBasic(int ticketSelection, int severitySelection) {
+		for(Ticket x : tickets) {
+			if (tempList.get(ticketSelection-1).equals(x)) {
+				x.setSeverity(severitySelection);
+			}
+		}
+		
+	}
+
+	public void changeTicketSeverityAll(int ticketSelection, int severitySelection) {
+		for(Ticket x : tickets) {
+			if (tempList.get(ticketSelection-1).equals(x)) {
+				x.setSeverity(severitySelection);
+				x.setAssignedTech(assignTicket(severitySelection));
+			}
+		}
+	}
 }
