@@ -117,11 +117,11 @@ public class ServiceDesk {
 		}
 		Pattern pattern = Pattern.compile("\\S+?@\\S+?\\.com");
 		Matcher matcher = pattern.matcher(email);
-		//check if user exists
-		if(be.userExists(email) ) {
+		// check if user exists
+		if (be.userExists(email)) {
 			System.out.println("Email already in use");
 			setUp();
-		} else if( !matcher.matches()) {
+		} else if (!matcher.matches()) {
 			System.out.println("invalid email address must contain @ and be .com");
 			setUp();
 		}
@@ -135,21 +135,25 @@ public class ServiceDesk {
 		}
 		System.out.println("Please enter Australian Phone Number");
 		phoneNumber = scan.nextLine();
-		Pattern phone = Pattern.compile("^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$");
+		Pattern phone = Pattern.compile(
+				"^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$");
 		Matcher ausPhone = phone.matcher(phoneNumber);
-		while(!ausPhone.matches()) {
+		while (!ausPhone.matches()) {
 			System.out.println("Must be australia phone number");
 			phoneNumber = scan.nextLine();
 			ausPhone = phone.matcher(phoneNumber);
 		}
 		// validation needed for phone number entry
-		System.out.println("Please enter Password minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
+		System.out.println(
+				"Please enter Password minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
 		password = scan.nextLine();
-		// 20 minimum length 30 maximum at least 1 lower and 1 upper comment out these lines for testing ease
+		// 20 minimum length 30 maximum at least 1 lower and 1 upper comment out these
+		// lines for testing ease
 		Pattern pass = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{20,30}$");
 		Matcher longPass = pass.matcher(password);
-		while(!longPass.matches()) {
-			System.out.println("Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
+		while (!longPass.matches()) {
+			System.out.println(
+					"Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
 			password = scan.nextLine();
 			longPass = pass.matcher(password);
 		}
@@ -304,7 +308,9 @@ public class ServiceDesk {
 		int menuSelection = 0;
 		String menu = "**Welcome technician here are you're available tickets please make a selection**\n";
 		menu += "1: view tickets\n";
-		menu += "3: Exit\n";
+		menu += "2: change severity\n";
+		menu += "3: change status\n";
+		menu += "4: Exit\n";
 		System.out.println(menu);
 		System.out.print("Enter Choice\n");
 		try {
@@ -314,7 +320,11 @@ public class ServiceDesk {
 				techMenu();
 			} else if (menuSelection == 2) {
 				viewTickets();
+				severityChange();
 			} else if (menuSelection == 3) {
+				viewTickets();
+				statusChange();
+			} else if (menuSelection == 4) {
 				System.out.print("Have a nice day :)");
 				System.exit(0);
 			}
@@ -328,6 +338,59 @@ public class ServiceDesk {
 		// change status to closed & resolved
 		// change status to closed not resolved
 		// view archived tickets
+	}
+
+	private void statusChange() {
+		this.scan = new Scanner(System.in);
+		int ticketSelection = 0;
+		System.out.println("Please choose which ticket or any other key to return");
+		System.out.print("Enter Choice\n");
+		try {
+			ticketSelection = Integer.parseInt(scan.nextLine());
+			if (be.confirmSelection(ticketSelection)) {
+				System.out.println("works");
+				changeStatus(ticketSelection);
+				techMenu();
+			}else {
+				System.out.println("Return to menu");
+				techMenu();
+			}
+		} catch (Exception e) {
+			System.out.println("Return to menu");
+			techMenu();
+		}
+
+	}
+	public void changeStatus(int ticketSelection) {
+		this.scan = new Scanner(System.in);
+		int statusSelection = 0;
+		System.out.println("The current status of this ticket is : " + be.tempList.get(ticketSelection).statusString()+"\n");
+		System.out.println("Please enter the new status of ticket or any other key to return to menu\n");
+		System.out.println("1 : Open");
+		System.out.println("2 : closed & resolved");
+		System.out.println("3 : closed & unresolved");
+		try {
+			statusSelection = Integer.parseInt(scan.nextLine());
+			if (statusSelection == 1) {
+				be.changeTicketStatus(ticketSelection, statusSelection);
+			} else if (statusSelection == 2) {
+				be.changeTicketStatus(ticketSelection, statusSelection);
+			} else if (statusSelection == 3) {
+				be.changeTicketStatus(ticketSelection, statusSelection);
+			} else  {
+				System.out.print("Return to menu");
+				techMenu();
+			}
+		} catch (Exception e) {
+			System.out.println("Return to menu");
+			techMenu();
+		}
+		
+	}
+
+	private void severityChange() {
+		// TODO Auto-generated method stub
+
 	}
 
 }
