@@ -406,8 +406,79 @@ public class ServiceDesk {
 	}
 
 	private void severityChange() {
-		// TODO Auto-generated method stub
+		this.scan = new Scanner(System.in);
+		int ticketSelection = 0;
+		System.out.println("Please choose which ticket or any other key to return");
+		System.out.print("Enter Choice\n");
+		try {
+			ticketSelection = Integer.parseInt(scan.nextLine());
+			if (be.confirmSelection(ticketSelection)) {
+				System.out.println("works");
+				changeSeverity(ticketSelection);
+				techMenu();
+			}else {
+				System.out.println("Return to menu");
+				techMenu();
+			}
+		} catch (Exception e) {
+			System.out.println("Return to menu");
+			techMenu();
+		}
 
+	}
+
+	private void changeSeverity(int ticketSelection) {
+		int i = ticketSelection - 1;
+		this.scan = new Scanner(System.in);
+		int severitySelection = 0;
+		int ticketCurrent = be.tempList.get(i).getSeverity();
+		String severityString = null;
+		if (ticketCurrent == 1) {
+			severityString = "Low";
+		}else if (ticketCurrent == 2) {
+			severityString = "Medium";
+		}else if (ticketCurrent == 3) {
+			severityString = "High";
+		}
+		System.out.println("The current severity of this ticket is : " + severityString +"\n");
+		System.out.println("Please enter the new severity of ticket or any other key to return to menu\n");
+		System.out.println("1 : Low");
+		System.out.println("2 : Medium");
+		System.out.println("3 : High");
+		try {
+			severitySelection = Integer.parseInt(scan.nextLine());
+			if (ticketCurrent == severitySelection) {
+				System.out.println("No changes to make");
+				techMenu();
+			}
+			//change if severity stays same assigns to same tech
+			else if ((ticketCurrent == 1 || ticketCurrent ==2) && (severitySelection == 1 || severitySelection ==2)) {
+				be.changeTicketSeverityBasic(ticketSelection, severitySelection);
+				be.persistTickets(savedTickets);
+				techMenu();
+			}
+			// if changing tech teir up
+			else if ((ticketCurrent == 1 || ticketCurrent ==2) && (severitySelection == 3)) {
+				be.changeTicketSeverityAll(ticketSelection, severitySelection);
+				be.persistTickets(savedTickets);
+				techMenu();
+			} 
+			// if changing tech teir down
+			else if ((ticketCurrent == 3) && (severitySelection ==1 || severitySelection == 2)) {
+				be.changeTicketStatus(ticketSelection, severitySelection);
+				be.persistTickets(savedTickets);
+				techMenu();
+			} 
+			
+			else  {
+				System.out.print("Return to menu");
+				techMenu();
+			}
+		} catch (Exception e) {
+			System.out.println("Return to menu");
+			techMenu();
+		}
+		
 	}
 
 }

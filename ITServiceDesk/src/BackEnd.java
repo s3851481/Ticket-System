@@ -381,4 +381,22 @@ public class BackEnd {
 
 	
 	}
+
+	public void changeTicketSeverityBasic(int ticketSelection, int severitySelection) {
+		for(Ticket x : tickets) {
+			if (tempList.get(ticketSelection-1).equals(x)) {
+				x.setSeverity(severitySelection);
+			}
+		}
+		
+	}
+
+	public void changeTicketSeverityAll(int ticketSelection, int severitySelection) {
+		for(Ticket x : tickets) {
+			if (tempList.get(ticketSelection-1).equals(x)) {
+				x.setSeverity(severitySelection);
+				x.setAssignedTech(assignTicket(severitySelection));
+			}
+		}
+	}
 }
