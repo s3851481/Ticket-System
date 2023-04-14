@@ -373,7 +373,7 @@ public class BackEnd {
 
 	public void changeTicketStatus(int ticketSelection, int statusSelection) {
 		for(Ticket x : tickets) {
-			if (tempList.get(ticketSelection).equals(x)) {
+			if (tempList.get(ticketSelection-1).equals(x)) {
 				x.setStatus(statusSelection);
 			}
 		}

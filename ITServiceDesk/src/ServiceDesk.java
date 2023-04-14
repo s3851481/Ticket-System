@@ -121,10 +121,11 @@ public class ServiceDesk {
 		if (be.userExists(email)) {
 			System.out.println("Email already in use");
 			setUp();
-		} else if (!matcher.matches()) {
-			System.out.println("invalid email address must contain @ and be .com");
-			setUp();
-		}
+		} 
+		//else if (!matcher.matches()) {
+		//System.out.println("invalid email address must contain @ and be .com");
+		//setUp();
+		//}
 		// validation needed and match from file
 		System.out.println("Please enter Full name");
 		name = scan.nextLine();
@@ -151,12 +152,12 @@ public class ServiceDesk {
 		// lines for testing ease
 		Pattern pass = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{20,30}$");
 		Matcher longPass = pass.matcher(password);
-		while (!longPass.matches()) {
-			System.out.println(
-					"Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
-			password = scan.nextLine();
-			longPass = pass.matcher(password);
-		}
+		//while (!longPass.matches()) {
+		//	System.out.println(
+		//			"Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
+		//	password = scan.nextLine();
+		//	longPass = pass.matcher(password);
+		//}
 		// validation needed for password requirements min 20 char with mix of
 		// characters
 		// String values[] = {email, name, Integer.toString(phoneNumber), password};
@@ -362,9 +363,10 @@ public class ServiceDesk {
 
 	}
 	public void changeStatus(int ticketSelection) {
+		int i = ticketSelection - 1;
 		this.scan = new Scanner(System.in);
 		int statusSelection = 0;
-		int ticketCurrent = be.tempList.get(ticketSelection).getStatus();
+		int ticketCurrent = be.tempList.get(i).getStatus();
 		String statusString = null;
 		if (ticketCurrent == 1) {
 			statusString = "Open";
@@ -382,15 +384,15 @@ public class ServiceDesk {
 			statusSelection = Integer.parseInt(scan.nextLine());
 			if (statusSelection == 1) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
-				be.persistTickets(savefile);
+				be.persistTickets(savedTickets);
 				techMenu();
 			} else if (statusSelection == 2) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
-				be.persistTickets(savefile);
+				be.persistTickets(savedTickets);
 				techMenu();
 			} else if (statusSelection == 3) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
-				be.persistTickets(savefile);
+				be.persistTickets(savedTickets);
 				techMenu();
 			} else  {
 				System.out.print("Return to menu");
