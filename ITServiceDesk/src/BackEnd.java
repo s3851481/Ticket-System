@@ -22,7 +22,6 @@ public class BackEnd {
 	List<Users> tempUseTwo = new ArrayList<>();
 	String validate;
 	Users currentUser = null;
-
 	Users tempTech = null;
 
 	private void initializeTechnicians() {
@@ -119,6 +118,21 @@ public class BackEnd {
 		boolean found = false;
 		if (currentUser.getPassword().matches(pass)) {
 			found = true;
+		}
+		if (found) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public boolean userExists(String email) {
+		boolean found = false;
+		for (Users x : users) {
+			if (x.getEmail().matches(email)) {
+				found = true;
+			}
 		}
 		if (found) {
 			return true;
@@ -340,7 +354,5 @@ public class BackEnd {
 
 
 	}
-
-
 
 }

@@ -1,6 +1,8 @@
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ServiceDesk {
 
@@ -93,7 +95,7 @@ public class ServiceDesk {
 					scan.close();
 				}
 			}
-		}else {
+		} else {
 			System.out.println("Invalid username");
 			loginMenu();
 		}
@@ -109,21 +111,48 @@ public class ServiceDesk {
 		String password;
 		System.out.println("Please enter Email adress");
 		email = scan.nextLine();
+		while (email.isBlank()) {
+			System.out.println("Must enter email");
+			email = scan.nextLine();
+		}
+		Pattern pattern = Pattern.compile("\\S+?@\\S+?\\.com");
+		Matcher matcher = pattern.matcher(email);
+		//check if user exists
+		if(be.userExists(email) ) {
+			System.out.println("Email already in use");
+			setUp();
+		} else if( !matcher.matches()) {
+			System.out.println("invalid email address must contain @ and be .com");
+			setUp();
+		}
 		// validation needed and match from file
 		System.out.println("Please enter Full name");
 		name = scan.nextLine();
 		// possible need more validation
 		while (name.isBlank()) {
-			System.out.println("Must enter name, Please enter first name:");
+			System.out.println("Must enter name, Please enter name:");
 			name = scan.nextLine();
 		}
-		System.out.println("Please enter Phone Number");
-		// phoneNumber = Integer.parseInt(scan.nextLine()); // phoneNumber is no longer
-		// an int
+		System.out.println("Please enter Australian Phone Number");
 		phoneNumber = scan.nextLine();
+		Pattern phone = Pattern.compile("^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$");
+		Matcher ausPhone = phone.matcher(phoneNumber);
+		while(!ausPhone.matches()) {
+			System.out.println("Must be australia phone number");
+			phoneNumber = scan.nextLine();
+			ausPhone = phone.matcher(phoneNumber);
+		}
 		// validation needed for phone number entry
-		System.out.println("Please enter Password");
+		System.out.println("Please enter Password minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
 		password = scan.nextLine();
+		// 20 minimum length 30 maximum at least 1 lower and 1 upper comment out these lines for testing ease
+		Pattern pass = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{20,30}$");
+		Matcher longPass = pass.matcher(password);
+		while(!longPass.matches()) {
+			System.out.println("Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
+			password = scan.nextLine();
+			longPass = pass.matcher(password);
+		}
 		// validation needed for password requirements min 20 char with mix of
 		// characters
 		// String values[] = {email, name, Integer.toString(phoneNumber), password};
@@ -241,10 +270,10 @@ public class ServiceDesk {
 		System.out.println("service not currently available");
 		loginMenu();
 	}
-	
+
 	private void viewTickets() {
 		be.printTickets();
-		
+
 	}
 
 	private void ticketCreation() {
