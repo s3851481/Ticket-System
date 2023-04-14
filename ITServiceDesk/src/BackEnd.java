@@ -436,10 +436,22 @@ public class BackEnd {
 		}
 		System.out.println("Your tickets are as following:");
 		System.out.println("------------------------------------------------------");
-		for (Ticket x : tempList) {
-			System.out.println(i + " : " + x);
-			i++;
+		if (tempList.isEmpty()) {
+			System.out.println("No tickets");
+		} else {
+			for (Ticket x : tempList) {
+				System.out.println(i + " : " + x);
+				i++;
+			}
 		}
+
+	}
+
+	public void printinfo() {
+
+		System.out.println("Your info:");
+		System.out.println("------------------------------------------------------");
+		System.out.println(currentUser);
 
 	}
 

@@ -214,6 +214,7 @@ public class ServiceDesk {
 				ticketCreation();
 			} else if (menuSelection == 2) {
 				viewTickets();
+				staffMenu();
 			} else if (menuSelection == 3) {
 				System.out.print("Have a nice day :)");
 				System.exit(0);
@@ -243,7 +244,7 @@ public class ServiceDesk {
 	
 	private void viewTickets() {
 		be.printTickets();
-		staffMenu();
+		
 	}
 
 	private void ticketCreation() {
@@ -273,11 +274,27 @@ public class ServiceDesk {
 		this.scan = new Scanner(System.in);
 		int menuSelection = 0;
 		String menu = "**Welcome technician here are you're available tickets please make a selection**\n";
-		// auto generate from the tickets class
-		// menu += "\n";
+		be.printinfo();
+		menu += "1: view tickets\n";
 		menu += "3: Exit\n";
 		System.out.println(menu);
 		System.out.print("Enter Choice\n");
+		try {
+			menuSelection = Integer.parseInt(scan.nextLine());
+			if (menuSelection == 1) {
+				viewTickets();
+				techMenu();
+			} else if (menuSelection == 2) {
+				viewTickets();
+			} else if (menuSelection == 3) {
+				System.out.print("Have a nice day :)");
+				System.exit(0);
+			}
+		} catch (Exception e) {
+			System.out.println("Enter valid choice");
+			techMenu();
+		}
+
 		// view tickets even closed within 24 hours
 		// change severity
 		// change status to closed & resolved

@@ -27,4 +27,9 @@ public class Technician extends Users implements Serializable {
 		this.ticketsOpen = ticketsOpen;
 	}
 
+	@Override
+	public String toString() {
+	
+		return "" + techLvl + " , " + ticketsOpen;
+	}
 }
