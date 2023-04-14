@@ -204,9 +204,15 @@ public class BackEnd {
 
 	public Ticket createTicket(String description, int severity) {
 		String creator = currentUser.getEmail();
+		String tech = null;
 		int status = 1;
-		String assignedTech =assignTicket(severity);
-		Ticket newTicket = new Ticket(description, severity, creator, assignedTech, status);
+		try {
+			String assignedTech = assignTicket(severity);
+			tech = assignedTech;
+		} catch (Exception e) {
+			System.out.println("error assigning tech");
+		}
+		Ticket newTicket = new Ticket(description, severity, creator, tech, status);
 		this.tickets.add(newTicket);
 		return newTicket;
 	}

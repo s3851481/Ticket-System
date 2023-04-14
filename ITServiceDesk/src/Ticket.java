@@ -70,6 +70,6 @@ public String toString() {
 	if (status == 1) {
 		statusString = "Open";
 	}
-	return "" + description + " , " + severityString + " , " + statusString;
+	return "" + description + " , " + severityString + " , " + statusString +" , " +assignedTech;
 }
 }
