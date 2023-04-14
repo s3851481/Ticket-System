@@ -55,4 +55,21 @@ public void setAssignedTech(String assignedTech) {
 public void setStatus(int status) {
 	this.status = status;
 }
+
+@Override
+public String toString() {
+	String severityString = "error";
+	if (severity == 1) {
+		severityString = "Low";
+	}else if (severity == 2) {
+		severityString = "medium";
+	}else if(severity == 3) {
+		severityString = "High";
+	}
+	String statusString ="error";
+	if (status == 1) {
+		statusString = "Open";
+	}
+	return "" + description + " , " + severityString + " , " + statusString;
+}
 }

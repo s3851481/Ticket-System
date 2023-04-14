@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
@@ -17,6 +18,7 @@ public class BackEnd {
     List<Users> users = new ArrayList<>();
     List<Technician> techs = new ArrayList<>();
     List<Ticket> tickets = new ArrayList<>();
+    List<Ticket> tempList = new ArrayList<>();
     List<Users> tempUse = new ArrayList<>();
     List<Users> tempUseTwo = new ArrayList<>();
     String validate;
@@ -400,6 +402,27 @@ public class BackEnd {
 
         }
     }
+    
+    public void printTickets() {
+    	tempList.clear();
+		int i = 1;
+		for (Ticket x : tickets) {
+			if (x.getCreator() == currentUser.getEmail())
+			tempList.add(x);
+			else if (x.getAssignedTech() == currentUser.getEmail()) {
+				tempList.add(x);
+			}
+    
+		}
+		System.out.println("Your tickets are as following:");
+		System.out.println("------------------------------------------------------");
+		for (Ticket x : tempList) {
+			System.out.println(i + " : " + x);
+			i++;
+		}
+		
+
+	}
 
     private void xfer() {
         File base = new File("users.txt");

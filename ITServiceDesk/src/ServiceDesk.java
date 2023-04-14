@@ -213,7 +213,7 @@ public class ServiceDesk {
 			if (menuSelection == 1) {
 				ticketCreation();
 			} else if (menuSelection == 2) {
-				error();
+				viewTickets();
 			} else if (menuSelection == 3) {
 				System.out.print("Have a nice day :)");
 				System.exit(0);
@@ -239,6 +239,11 @@ public class ServiceDesk {
 	private void error() {
 		System.out.println("service not currently available");
 		loginMenu();
+	}
+	
+	private void viewTickets() {
+		be.printTickets();
+		staffMenu();
 	}
 
 	private void ticketCreation() {
