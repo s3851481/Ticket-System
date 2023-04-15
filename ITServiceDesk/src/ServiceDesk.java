@@ -111,7 +111,7 @@ public class ServiceDesk {
 		String password;
 		System.out.println("Please enter Email adress");
 		email = scan.nextLine();
-		while (email.isBlank()) {
+		while (email.isEmpty()) {
 			System.out.println("Must enter email");
 			email = scan.nextLine();
 		}
@@ -130,7 +130,7 @@ public class ServiceDesk {
 		System.out.println("Please enter Full name");
 		name = scan.nextLine();
 		// possible need more validation
-		while (name.isBlank()) {
+		while (name.isEmpty()) {
 			System.out.println("Must enter name, Please enter name:");
 			name = scan.nextLine();
 		}
