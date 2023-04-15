@@ -205,7 +205,7 @@ public class ServiceDesk {
 					if (be.validatePass(pass)) {
 						if (be.currentUser.getSecurityQuestions() == null) {
 							System.out.println("We noticed you do not have any security questions in case you"
-									+ "you forget your password? Would you like to record some now? (Y/N)");
+									+ " forget your password? Would you like to record some now? (Y/N)");
 							String response = scan.nextLine();
 							if (response == "Y") {
 								recordSecurityQuestions();
@@ -271,11 +271,7 @@ public class ServiceDesk {
 	// closed tickets archived after 24 hour period noone can re-open but can be
 	// viewed
 
-	private void error() {
-		System.out.println("service not currently available");
-		loginMenu();
-	}
-
+	
 	private void viewTickets() {
 		be.printTickets();
 
@@ -307,7 +303,7 @@ public class ServiceDesk {
 	private void techMenu() {
 		this.scan = new Scanner(System.in);
 		int menuSelection = 0;
-		String menu = "**Welcome technician here are you're available tickets please make a selection**\n";
+		String menu = "**Welcome technician here are you're available tickets please make a selection**\n\n";
 		menu += "1: view tickets\n";
 		menu += "2: change severity\n";
 		menu += "3: change status\n";
@@ -349,7 +345,7 @@ public class ServiceDesk {
 		try {
 			ticketSelection = Integer.parseInt(scan.nextLine());
 			if (be.confirmSelection(ticketSelection)) {
-				System.out.println("works");
+				//System.out.println("works");
 				changeStatus(ticketSelection);
 				techMenu();
 			}else {
@@ -385,21 +381,24 @@ public class ServiceDesk {
 			if (statusSelection == 1) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
 				be.persistTickets(savedTickets);
+				System.out.println("");
 				techMenu();
 			} else if (statusSelection == 2) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
 				be.persistTickets(savedTickets);
+				System.out.println("");
 				techMenu();
 			} else if (statusSelection == 3) {
 				be.changeTicketStatus(ticketSelection, statusSelection);
 				be.persistTickets(savedTickets);
+				System.out.println("");
 				techMenu();
 			} else  {
-				System.out.print("Return to menu");
+				System.out.println("Return to menu\n");
 				techMenu();
 			}
 		} catch (Exception e) {
-			System.out.println("Return to menu");
+			System.out.println("Return to menu\n");
 			techMenu();
 		}
 		
@@ -409,11 +408,11 @@ public class ServiceDesk {
 		this.scan = new Scanner(System.in);
 		int ticketSelection = 0;
 		System.out.println("Please choose which ticket or any other key to return");
-		System.out.print("Enter Choice\n");
+		//System.out.print("Enter Choice\n");
 		try {
 			ticketSelection = Integer.parseInt(scan.nextLine());
 			if (be.confirmSelection(ticketSelection)) {
-				System.out.println("works");
+				//System.out.println("works");
 				changeSeverity(ticketSelection);
 				techMenu();
 			}else {

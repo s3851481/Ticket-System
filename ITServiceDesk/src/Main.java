@@ -1,6 +1,7 @@
 
 public class Main {
 	private BackEnd backEnd;
+	@SuppressWarnings("unused")
 	private ServiceDesk console;
 
 	public Main() {
@@ -8,6 +9,7 @@ public class Main {
 		this.console = new ServiceDesk(backEnd);
 	}
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Main application = new Main();
 	}
