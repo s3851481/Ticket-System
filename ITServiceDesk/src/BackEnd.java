@@ -360,9 +360,6 @@ public class BackEnd {
 				x.setStatus(statusSelection);
 			}
 		}
-		
-
-	
 	}
 
 	public void changeTicketSeverityBasic(int ticketSelection, int severitySelection) {

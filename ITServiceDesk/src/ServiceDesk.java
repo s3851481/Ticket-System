@@ -464,7 +464,7 @@ public class ServiceDesk {
 			} 
 			// if changing tech teir down
 			else if ((ticketCurrent == 3) && (severitySelection ==1 || severitySelection == 2)) {
-				be.changeTicketStatus(ticketSelection, severitySelection);
+				be.changeTicketSeverityAll(ticketSelection, severitySelection);
 				be.persistTickets(savedTickets);
 				techMenu();
 			} 
