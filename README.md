@@ -1,13 +1,4 @@
 # Ticket-System
-# Assignment 2 for Software Engineering Project Management
-Develop a ReadMe.txt file to explain how your code should be executed, and submit this file with all three of your
-submissions. Update the file as necessary for the second and third submission to
-incorporate new elements of your code. Write the instructions for a user who will be using
-RMIT’s myDesktop (https://mydesktop.rmit.edu.au/) to run your code. You should test these
-instructions to make sure they work – have a member of your team follow your own
-instructions using RMIT’s myDesktop facility, step by step!
-
-
 
 
 To use the ticketing-system program you will have to open up an IDE that is capable of running JAVA. 
@@ -18,6 +9,7 @@ multiple so for this just select the one without a date in its name.
 To run a Java program through Eclipse follow these steps: 
 
 Setup and import:
+PLEASE NOTE classes and program was built using JDK 19
 
 1. Open Eclipse and choose a workspace as prompted.
 
@@ -41,7 +33,7 @@ Setup and import:
 
 Alternatively, you can also create a new "Run Configuration" by selecting "Run" > "Run Configurations" and then selecting "Java Application". From there, you can specify the project and main class to run.
  
-Navagation:
+Navigation:
 
 From the menu shown, in order to make your selection you must first click on the console, then enter the number that correlates to your choice, then click enter e.g. from the main menu if you want to select Login you must first type "1" then press enter.
 
@@ -53,13 +45,11 @@ Set up Account:
 
 3. Once all questions have been answered, you will return to the Main Menu.
 
-4. Congratulaions you have created your account.
-
-
-
-
+4. Congratulations you have created your account.
 
 Login:
+PLEASE NOTE 
+When entering log in details please ensure you check for errors, if entered incorrectly program will terminate
 
 1. Select "Login" from Main Menu.
 
@@ -67,10 +57,7 @@ Login:
 
 3. Congratulations you are now logged in.
 
-
-
-
-
+ 
 Forgot password:
 
 1. Select "Forgotten Password" from the main menu.
@@ -82,26 +69,75 @@ Forgot password:
 4. Congratulations you have just set a new password.
 
 
-
-
-
 Submit Ticket:
 
 1. Select "Submit ticket" from the members portal.
 
-2. Follow promps on screen to enter a description and a severity level.
+2. Follow prompts on screen to enter a description and a severity level.
 
 3. You will then be back at the member portal. 
 
 4. Congratulations you have submitted your ticket.
 
 
-
-
-
 View Ticket:
 
-CURRENTLY UNDER MAINTENANCE
+ 1. Select "view tickets" from the staff member portal.
+ 
+ 2. Congratulation you can now view the tickets.
+ 
+ 
+ Technician Logon
+ 
+ You must enter the details of the technician, I will list them below for testing purposes.
+ 
+ Email: harry.styles@cinco.com
+ Name: Harry Styles
+ Ph No: 0356781000
+ Password: Password1
+ 
+ Email: niall.horan@cinco.com
+ Name: Niall Horan
+ Ph No: 0356781001
+ Password: Password1
 
+ Email: liam.payne@cinco.com
+ Name: Liam Payne
+ Ph No: 0356781002
+ Password: Password1
+ 
+  Email: louis.tomlinson@cinco.com
+ Name: Louis Tomlinson
+ Ph No: 0356781003
+ Password: Password1
+ 
+ 1. Select "login" from the main menu.
+ 
+ 2. Enter one of the technicians details listed above.
+ 
+ 3. You may be asked if you want to add security questions, type y for yes or n for no. Enter details as asked.
+ 
+ 4. Congratulations you are now logged in as a technician.
+ 
+ Change severity
+ 
+ 1. Select "change severity" from the technician menu.
+ 
+ 2. Select which ticket you want to change by entering the number displayed with the ticket.
+ 
+ 3. Select the new severity by typing the number that represents the severity.
+ 
+ 4. Congratulations you have changed the severity.
 
+Change Status
 
+ 1. Select "change status" from the technician  menu.
+ 
+ 2. Select which ticket you want to change by entering the number displayed with the ticket.
+ 
+ 3. Select the new status of the ticket by typing the number that represents the status.
+ 
+ 4. Congratulations you have changed the status
+
+ 
+ 
