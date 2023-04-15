@@ -2,6 +2,10 @@ import java.io.Serializable;
 import java.util.Hashtable;
 
 public class Users implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3267181493100476767L;
 	private String email;
 	private String fullName;
 	private String phoneNum;

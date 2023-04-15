@@ -1,15 +1,9 @@
-import java.io.BufferedReader;
 import java.io.*;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 
@@ -42,6 +36,7 @@ public class BackEnd {
 		this.users.add(tech5);
 	}
 
+	@SuppressWarnings({ "unchecked", "resource" })
 	public void load(String savefile) {
 		File userFile = new File(savefile);
 		List<Users> users = new ArrayList<>();
@@ -83,6 +78,7 @@ public class BackEnd {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "resource" })
 	public void loadTickets(String savedTickets) {
 		File ticketsFile = new File(savedTickets);
 		List<Ticket> currentTickets = new ArrayList<>();
@@ -190,12 +186,6 @@ public class BackEnd {
 		}
 	}
 
-	public void createStringValidate(Users tech) {
-		HashMap<String, Integer> ticketCounts = getAssignedTicketCount();
-		validate = tech.getEmail() + "," + tech.getFullName() + "," + tech.getPhoneNum() + "," + tech.getPassword()
-				+ "," + tech.getUserType().toString() + ",";
-		System.out.println("this is what validate is :" + validate);
-	}
 
 	private HashMap<String, Integer> getAssignedTicketCount() {
 		HashMap<String, Integer> ticketCounts = new HashMap<String, Integer>();
@@ -320,15 +310,6 @@ public class BackEnd {
 		return tech;
 	}
 
-	private ArrayList<Users> getTechnicians() {
-		ArrayList<Users> techs = new ArrayList<Users>();
-		for (Users x : this.users) {
-			if (x.getUserType() == userType.Level1Tech || x.getUserType() == userType.Level2Tech) {
-				techs.add(x);
-			}
-		}
-		return techs;
-	}
 
 	public void printTickets() {
 		tempList.clear();
@@ -341,7 +322,7 @@ public class BackEnd {
 			}
 
 		}
-		System.out.println("Your tickets are as following:");
+		System.out.println("Your tickets are as follows :");
 		System.out.println("------------------------------------------------------");
 		if (tempList.isEmpty()) {
 			System.out.println("No tickets");
@@ -349,8 +330,10 @@ public class BackEnd {
 			for (Ticket x : tempList) {
 				System.out.println(i + " : " + x);
 				i++;
+				System.out.println("------------------------------------------------------");
 			}
 		}
+		System.out.println("");
 
 
 	}
