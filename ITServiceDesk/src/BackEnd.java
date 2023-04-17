@@ -396,7 +396,7 @@ public class BackEnd {
 		tempList.clear();
 		int i = 1;
 		for (Ticket x : tickets) {
-			if (x.getCreator().matches(currentUser.getEmail())) {
+			if (x.getCreator().matches(currentUser.getEmail())&& x.getClosed() == null) {
 				tempList.add(x);
 			} else if (x.getAssignedTech().matches(currentUser.getEmail())) {
 				tempList.add(x);
