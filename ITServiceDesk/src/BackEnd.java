@@ -3,20 +3,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class BackEnd {
 
 	List<Users> users = new ArrayList<>();
 	List<Ticket> tickets = new ArrayList<>();
 	List<Ticket> tempList = new ArrayList<>();
+	List<Ticket> archiveTickets = new ArrayList<>();
+	List<Ticket> selectionTickets = new ArrayList<>();
 	List<Users> tempUse = new ArrayList<>();
 	List<Users> tempUseTwo = new ArrayList<>();
 	String validate;
 	Users currentUser = null;
 	Users tempTech = null;
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 	private void initializeTechnicians() {
 		Users tech1 = new Users("harry.styles@cinco.com", "Harry Styles", "0356781000", "Password1",
@@ -29,11 +35,13 @@ public class BackEnd {
 				userType.Level2Tech, null);
 		Users tech5 = new Users("zayn.malik@cinco.com", "Zayn Tomlinson", "0356781004", "Password1",
 				userType.Level2Tech, null);
+		Users admin = new Users("admin@cinco.com", "Administrator", "0400000000", "Admin", userType.admin, null);
 		this.users.add(tech1);
 		this.users.add(tech2);
 		this.users.add(tech3);
 		this.users.add(tech4);
 		this.users.add(tech5);
+		this.users.add(admin);
 	}
 
 	@SuppressWarnings({ "unchecked", "resource" })
@@ -82,17 +90,66 @@ public class BackEnd {
 	public void loadTickets(String savedTickets) {
 		File ticketsFile = new File(savedTickets);
 		List<Ticket> currentTickets = new ArrayList<>();
+		long millis = System.currentTimeMillis();
 		if (ticketsFile.exists()) {
 			try {
+				// current time counter for verification add extra time to this for testing
 				FileInputStream fis = new FileInputStream(savedTickets);
 				BufferedInputStream bis = new BufferedInputStream(fis);
 				ObjectInputStream ois = new ObjectInputStream(bis);
 				currentTickets = (ArrayList<Ticket>) ois.readObject();
 				this.tickets = currentTickets;
+
 			} catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 				System.out.println("error");
 			}
+		}
+
+	}
+
+	public void loadArchive(String archive) {
+		File archiveFile = new File(archive);
+		List<Ticket> currentArchive = new ArrayList<>();
+
+		if (archiveFile.exists()) {
+			try {
+				FileInputStream fis = new FileInputStream(archive);
+				BufferedInputStream bis = new BufferedInputStream(fis);
+				ObjectInputStream ois = new ObjectInputStream(bis);
+				currentArchive = (ArrayList<Ticket>) ois.readObject();
+				this.archiveTickets = currentArchive;
+
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+				System.out.println("error");
+			}
+
+		}
+	}
+
+	public void resetTickets(String savedTickets, String archive) {
+		long millis = System.currentTimeMillis();
+		this.tempList.clear();
+		// movese file to arcchive file if 24 elapsed
+		for (Ticket x : tickets) {
+			if (x.getClosed() != null) {
+				// + 24 * 60 * 60 * 1000 add this after millis for 24 hour otherwise they go
+				// straight to archive
+				if (millis >= x.getTimeCounter() && x.getTimeCounter() != 0) {
+					this.archiveTickets.add(x);
+					// add only the newly changed over tickets to a list for removal
+					this.tempList.add(x);
+				}
+			}
+			// removes the tickets that are in the archive from the main tickets
+		}
+		if (!tempList.isEmpty()) {
+			// removes all matches from tempList from the tickets than overrides the files
+			tickets.removeAll(tempList);
+			persistTickets(savedTickets);
+			// override the archive
+			persistTickets2(archive);
 		}
 
 	}
@@ -107,7 +164,10 @@ public class BackEnd {
 		String creator = values[2];
 		String assignedTech = values[3];
 		int status = Integer.parseInt(values[4]);
-		return new Ticket(description, severity, creator, assignedTech, status);
+		LocalDate created = LocalDate.parse(values[5]);
+		LocalDate closed = LocalDate.parse(values[6]);
+		long count = Long.parseLong(values[7]);
+		return new Ticket(description, severity, creator, assignedTech, status, created, closed, count);
 	}
 
 	public boolean validatePass(String pass) {
@@ -158,6 +218,9 @@ public class BackEnd {
 	public Ticket createTicket(String description, int severity) {
 		String creator = currentUser.getEmail();
 		String tech = null;
+		LocalDate created = LocalDate.now();
+		LocalDate closed = null;
+		long count = 0;
 		int status = 1;
 		try {
 			String assignedTech = assignTicket(severity);
@@ -165,7 +228,7 @@ public class BackEnd {
 		} catch (Exception e) {
 			System.out.println("error assigning tech");
 		}
-		Ticket newTicket = new Ticket(description, severity, creator, tech, status);
+		Ticket newTicket = new Ticket(description, severity, creator, tech, status, created, closed, count);
 		this.tickets.add(newTicket);
 		return newTicket;
 	}
@@ -186,6 +249,21 @@ public class BackEnd {
 		}
 	}
 
+	public void persistTickets2(String archive) {
+		try {
+			FileOutputStream fos = new FileOutputStream(archive);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject(this.archiveTickets);
+			oos.flush();
+			oos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+		}
+	}
 
 	private HashMap<String, Integer> getAssignedTicketCount() {
 		HashMap<String, Integer> ticketCounts = new HashMap<String, Integer>();
@@ -310,7 +388,6 @@ public class BackEnd {
 		return tech;
 	}
 
-
 	public void printTickets() {
 		tempList.clear();
 		int i = 1;
@@ -335,7 +412,6 @@ public class BackEnd {
 		}
 		System.out.println("");
 
-
 	}
 
 	public boolean confirmSelection(int x) {
@@ -351,32 +427,100 @@ public class BackEnd {
 			return false;
 		}
 
-		
 	}
 
-	public void changeTicketStatus(int ticketSelection, int statusSelection) {
-		for(Ticket x : tickets) {
-			if (tempList.get(ticketSelection-1).equals(x)) {
+	public void changeTicketStatus(int ticketSelection, int statusSelection, int closedTime) {
+		for (Ticket x : tickets) {
+			if (tempList.get(ticketSelection - 1).equals(x)) {
 				x.setStatus(statusSelection);
+				if (closedTime == 2) {
+					x.setClosed(LocalDate.now());
+					x.setTimeCounter(System.currentTimeMillis());
+				} else if (closedTime == 1 && x.getClosed() != null) {
+					x.setClosed(null);
+					x.setTimeCounter(0);
+				}
 			}
 		}
 	}
 
 	public void changeTicketSeverityBasic(int ticketSelection, int severitySelection) {
-		for(Ticket x : tickets) {
-			if (tempList.get(ticketSelection-1).equals(x)) {
+		for (Ticket x : tickets) {
+			if (tempList.get(ticketSelection - 1).equals(x)) {
 				x.setSeverity(severitySelection);
 			}
 		}
-		
+
 	}
 
 	public void changeTicketSeverityAll(int ticketSelection, int severitySelection) {
-		for(Ticket x : tickets) {
-			if (tempList.get(ticketSelection-1).equals(x)) {
+		for (Ticket x : tickets) {
+			if (tempList.get(ticketSelection - 1).equals(x)) {
 				x.setSeverity(severitySelection);
 				x.setAssignedTech(assignTicket(severitySelection));
 			}
 		}
+	}
+
+	public void printReportDays(LocalDate dayStart, LocalDate dayEnd) {
+		int ticketCount = 0;
+		int openCount = 0;
+		int closedCount = 0;
+
+		// add to selection list from the dates provided
+		selectionTickets.clear();
+		int i = 1;
+		for (Ticket x : tickets) {
+			if (x.getCreated().isAfter(dayStart) || x.getCreated().isEqual(dayStart)) {
+				if (x.getClosed() != null) {
+					if (x.getCreated().isBefore(dayEnd)
+							|| x.getCreated().isEqual(dayEnd)) {
+						this.selectionTickets.add(x);
+						ticketCount++;
+						closedCount++;
+					}
+
+				} else if (x.getClosed() == null && x.getCreated().isBefore(dayEnd)
+						|| x.getCreated().isEqual(dayEnd)) {
+					this.selectionTickets.add(x);
+					ticketCount++;
+					openCount++;
+				}
+
+			}
+		}
+		for (Ticket x : archiveTickets) {
+			if ((x.getCreated().isAfter(dayStart) || x.getCreated().isEqual(dayStart)) && (x.getCreated().isBefore(dayEnd)
+					|| x.getCreated().isEqual(dayEnd))) {
+
+				this.selectionTickets.add(x);
+				ticketCount++;
+				closedCount++;
+
+			}
+		}
+		System.out.println("Your tickets are as follows :");
+		System.out.println("------------------------------------------------------");
+		if (selectionTickets.isEmpty()) {
+			System.out.println("No tickets");
+		} else {
+			System.out.println("For the selected period there are :\nTickets submited : " + ticketCount
+					+ "\nTickets Open : " + openCount + "\nTickets Closed : " + closedCount);
+			System.out.println("------------------------------------------------------");
+			for (Ticket x : selectionTickets) {
+				if (x.getClosed() != null) {
+					System.out.println(i + " : " + x + "\n    Date created : " + formatter.format(x.getCreated())
+							+ "\n    Date Closed : " + formatter.format(x.getClosed()));
+					i++;
+					System.out.println("------------------------------------------------------");
+				} else {
+					System.out.println(i + " : " + x + "\n    Date created : " + formatter.format(x.getCreated())
+							+ "\n    Date Closed : N/A");
+					i++;
+					System.out.println("------------------------------------------------------");
+				}
+			}
+		}
+		System.out.println("");
 	}
 }

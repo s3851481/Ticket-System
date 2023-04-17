@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
@@ -8,6 +10,7 @@ public class ServiceDesk {
 
 	private final String savefile = "users";
 	private final String savedTickets = "tickets";
+	private final String archive = "archive";
 	BackEnd be;
 	private Scanner scan;
 
@@ -16,6 +19,8 @@ public class ServiceDesk {
 		be = backEnd;
 		be.load(savefile);
 		be.loadTickets(savedTickets);
+		be.loadArchive(archive);
+		be.resetTickets(savedTickets,archive);
 		System.out.println("Welcome to IT service desk");
 		loginMenu();
 	}
@@ -62,6 +67,10 @@ public class ServiceDesk {
 		String user;
 		System.out.println("Please enter username:");
 		user = scan.nextLine();
+		while(!be.validateUser(user)) {
+			System.out.println("Username incorrect! Please enter username:");
+			user = scan.nextLine();
+		}
 		if (be.validateUser(user)) {
 			if (be.currentUser != null) {
 				try {
@@ -121,11 +130,11 @@ public class ServiceDesk {
 		if (be.userExists(email)) {
 			System.out.println("Email already in use");
 			setUp();
-		} 
-		//else if (!matcher.matches()) {
-		//System.out.println("invalid email address must contain @ and be .com");
-		//setUp();
-		//}
+		}
+		// else if (!matcher.matches()) {
+		// System.out.println("invalid email address must contain @ and be .com");
+		// setUp();
+		// }
 		// validation needed and match from file
 		System.out.println("Please enter Full name");
 		name = scan.nextLine();
@@ -152,12 +161,13 @@ public class ServiceDesk {
 		// lines for testing ease
 		Pattern pass = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{20,30}$");
 		Matcher longPass = pass.matcher(password);
-		//while (!longPass.matches()) {
-		//	System.out.println(
-		//			"Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
-		//	password = scan.nextLine();
-		//	longPass = pass.matcher(password);
-		//}
+		// while (!longPass.matches()) {
+		// System.out.println(
+		// "Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase
+		// alphanumeric");
+		// password = scan.nextLine();
+		// longPass = pass.matcher(password);
+		// }
 		// validation needed for password requirements min 20 char with mix of
 		// characters
 		// String values[] = {email, name, Integer.toString(phoneNumber), password};
@@ -197,6 +207,10 @@ public class ServiceDesk {
 		String pass;
 		System.out.println("Please enter email address");
 		user = scan.nextLine();
+		while(!be.validateUser(user)) {
+			System.out.println("Username incorrect! Please enter username:");
+			user = scan.nextLine();
+		}
 		try {
 			if (be.validateUser(user)) {
 				System.out.println("Please enter password");
@@ -216,6 +230,8 @@ public class ServiceDesk {
 						} else if (be.currentUser.getUserType() == userType.Level1Tech
 								|| be.currentUser.getUserType() == userType.Level2Tech) {
 							techMenu();
+						} else if (be.currentUser.getUserType() == userType.admin) {
+							adminMenu();
 						}
 					} else {
 						System.out.println("incorrect password!");
@@ -231,6 +247,57 @@ public class ServiceDesk {
 			System.out.println("error has occured");
 			loginMenu();
 		}
+	}
+
+	private void adminMenu() {
+		this.scan = new Scanner(System.in);
+		int menuSelection = 0;
+		String menu = "**Welcome Administrator what would you like to do today**\n";
+		menu += "1: Print Report\n";
+		menu += "2: Exit\n";
+		System.out.println(menu);
+		System.out.print("Enter Choice\n");
+		try {
+			menuSelection = Integer.parseInt(scan.nextLine());
+			if (menuSelection == 1) {
+				printReport();
+			} else if (menuSelection == 2) {
+				System.out.print("Have a nice day :)");
+				System.exit(0);
+			}
+		} catch (Exception e) {
+			System.out.println("Enter valid choice");
+			adminMenu();
+		}
+	}
+
+	private void printReport() {
+		this.scan = new Scanner(System.in);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dayStart = null;
+		LocalDate dayEnd = null;
+		try {
+			while (dayStart == null) {
+				System.out.println("Please select day from (dd/mm/yyyy) :");
+				dayStart = LocalDate.parse(scan.nextLine(), formatter);
+
+			}
+			while (dayEnd == null) {
+				System.out.println("Please select day end (dd/mm/yyyy) :");
+				dayEnd = LocalDate.parse(scan.nextLine(), formatter);
+				while (dayEnd.isBefore(dayStart)) {
+					System.out.println("Day is invalid due to being before the start day");
+					dayEnd = LocalDate.parse(scan.nextLine(), formatter);
+				}
+
+			}
+			be.printReportDays(dayStart, dayEnd);
+			adminMenu();
+		} catch (Exception e) {
+			System.out.println("Error in date format please try again!!");
+			printReport();
+		}
+
 	}
 
 	private void staffMenu() {
@@ -258,20 +325,10 @@ public class ServiceDesk {
 			staffMenu();
 		}
 
-		// submit ticket
-		// view status of tickets for themselves
-		// description
-		// severity h m l
-		// low medium level 1
-		// high level 2
+
 	}
 
-	// ticket notes assigned based on the ticket severity and goes to least number
-	// otherwise random
-	// closed tickets archived after 24 hour period noone can re-open but can be
-	// viewed
 
-	
 	private void viewTickets() {
 		be.printTickets();
 
@@ -345,10 +402,10 @@ public class ServiceDesk {
 		try {
 			ticketSelection = Integer.parseInt(scan.nextLine());
 			if (be.confirmSelection(ticketSelection)) {
-				//System.out.println("works");
+				// System.out.println("works");
 				changeStatus(ticketSelection);
 				techMenu();
-			}else {
+			} else {
 				System.out.println("Return to menu");
 				techMenu();
 			}
@@ -358,6 +415,7 @@ public class ServiceDesk {
 		}
 
 	}
+
 	public void changeStatus(int ticketSelection) {
 		int i = ticketSelection - 1;
 		this.scan = new Scanner(System.in);
@@ -366,12 +424,12 @@ public class ServiceDesk {
 		String statusString = null;
 		if (ticketCurrent == 1) {
 			statusString = "Open";
-		}else if (ticketCurrent == 2) {
+		} else if (ticketCurrent == 2) {
 			statusString = "closed & resolved";
-		}else if (ticketCurrent == 3) {
+		} else if (ticketCurrent == 3) {
 			statusString = "closed & unresolved";
 		}
-		System.out.println("The current status of this ticket is : " + statusString +"\n");
+		System.out.println("The current status of this ticket is : " + statusString + "\n");
 		System.out.println("Please enter the new status of ticket or any other key to return to menu\n");
 		System.out.println("1 : Open");
 		System.out.println("2 : closed & resolved");
@@ -379,21 +437,21 @@ public class ServiceDesk {
 		try {
 			statusSelection = Integer.parseInt(scan.nextLine());
 			if (statusSelection == 1) {
-				be.changeTicketStatus(ticketSelection, statusSelection);
+				be.changeTicketStatus(ticketSelection, statusSelection, 1);
 				be.persistTickets(savedTickets);
 				System.out.println("");
 				techMenu();
 			} else if (statusSelection == 2) {
-				be.changeTicketStatus(ticketSelection, statusSelection);
+				be.changeTicketStatus(ticketSelection, statusSelection, 2);
 				be.persistTickets(savedTickets);
 				System.out.println("");
 				techMenu();
 			} else if (statusSelection == 3) {
-				be.changeTicketStatus(ticketSelection, statusSelection);
+				be.changeTicketStatus(ticketSelection, statusSelection, 2);
 				be.persistTickets(savedTickets);
 				System.out.println("");
 				techMenu();
-			} else  {
+			} else {
 				System.out.println("Return to menu\n");
 				techMenu();
 			}
@@ -401,21 +459,21 @@ public class ServiceDesk {
 			System.out.println("Return to menu\n");
 			techMenu();
 		}
-		
+
 	}
 
 	private void severityChange() {
 		this.scan = new Scanner(System.in);
 		int ticketSelection = 0;
 		System.out.println("Please choose which ticket or any other key to return");
-		//System.out.print("Enter Choice\n");
+		// System.out.print("Enter Choice\n");
 		try {
 			ticketSelection = Integer.parseInt(scan.nextLine());
 			if (be.confirmSelection(ticketSelection)) {
-				//System.out.println("works");
+				// System.out.println("works");
 				changeSeverity(ticketSelection);
 				techMenu();
-			}else {
+			} else {
 				System.out.println("Return to menu");
 				techMenu();
 			}
@@ -434,12 +492,12 @@ public class ServiceDesk {
 		String severityString = null;
 		if (ticketCurrent == 1) {
 			severityString = "Low";
-		}else if (ticketCurrent == 2) {
+		} else if (ticketCurrent == 2) {
 			severityString = "Medium";
-		}else if (ticketCurrent == 3) {
+		} else if (ticketCurrent == 3) {
 			severityString = "High";
 		}
-		System.out.println("The current severity of this ticket is : " + severityString +"\n");
+		System.out.println("The current severity of this ticket is : " + severityString + "\n");
 		System.out.println("Please enter the new severity of ticket or any other key to return to menu\n");
 		System.out.println("1 : Low");
 		System.out.println("2 : Medium");
@@ -450,26 +508,26 @@ public class ServiceDesk {
 				System.out.println("No changes to make");
 				techMenu();
 			}
-			//change if severity stays same assigns to same tech
-			else if ((ticketCurrent == 1 || ticketCurrent ==2) && (severitySelection == 1 || severitySelection ==2)) {
+			// change if severity stays same assigns to same tech
+			else if ((ticketCurrent == 1 || ticketCurrent == 2) && (severitySelection == 1 || severitySelection == 2)) {
 				be.changeTicketSeverityBasic(ticketSelection, severitySelection);
 				be.persistTickets(savedTickets);
 				techMenu();
 			}
 			// if changing tech teir up
-			else if ((ticketCurrent == 1 || ticketCurrent ==2) && (severitySelection == 3)) {
+			else if ((ticketCurrent == 1 || ticketCurrent == 2) && (severitySelection == 3)) {
 				be.changeTicketSeverityAll(ticketSelection, severitySelection);
 				be.persistTickets(savedTickets);
 				techMenu();
-			} 
+			}
 			// if changing tech teir down
-			else if ((ticketCurrent == 3) && (severitySelection ==1 || severitySelection == 2)) {
+			else if ((ticketCurrent == 3) && (severitySelection == 1 || severitySelection == 2)) {
 				be.changeTicketSeverityAll(ticketSelection, severitySelection);
 				be.persistTickets(savedTickets);
 				techMenu();
-			} 
-			
-			else  {
+			}
+
+			else {
 				System.out.print("Return to menu");
 				techMenu();
 			}
@@ -477,7 +535,7 @@ public class ServiceDesk {
 			System.out.println("Return to menu");
 			techMenu();
 		}
-		
+
 	}
 
 }

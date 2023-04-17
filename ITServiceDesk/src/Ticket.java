@@ -1,4 +1,6 @@
 import java.io.Serializable;
+import java.time.LocalDate;
+
 
 public class Ticket implements Serializable {
 	/**
@@ -10,14 +12,45 @@ public class Ticket implements Serializable {
 	private String creator;
 	private String assignedTech;
 	private int status;
+	private LocalDate created;
+	private LocalDate closed;
+	private long timeCounter;
 
-	public Ticket(String description, int severity, String creator, String assignedTech, int status) {
+
+	public Ticket(String description, int severity, String creator, String assignedTech, int status, LocalDate created, LocalDate closed, long timeCounter) {
 		super();
 		this.description = description;
 		this.severity = severity;
 		this.creator = creator;
 		this.assignedTech = assignedTech;
 		this.status = status;
+		this.created = created;
+		this.closed = closed;
+		this.timeCounter = timeCounter;
+	}
+
+	public long getTimeCounter() {
+		return timeCounter;
+	}
+
+	public void setTimeCounter(long timeCounter) {
+		this.timeCounter = timeCounter;
+	}
+
+	public LocalDate getCreated() {
+		return created;
+	}
+
+	public LocalDate getClosed() {
+		return closed;
+	}
+
+	public void setCreated(LocalDate created) {
+		this.created = created;
+	}
+
+	public void setClosed(LocalDate closed) {
+		this.closed = closed;
 	}
 
 	public String getDescription() {
