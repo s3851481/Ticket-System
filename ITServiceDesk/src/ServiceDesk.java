@@ -201,6 +201,7 @@ public class ServiceDesk {
 
 	}
 
+	// main login menu with validations 
 	private void login() {
 		this.scan = new Scanner(System.in);
 		String user;
@@ -249,6 +250,7 @@ public class ServiceDesk {
 		}
 	}
 
+	// menu for the admin user
 	private void adminMenu() {
 		this.scan = new Scanner(System.in);
 		int menuSelection = 0;
@@ -271,6 +273,7 @@ public class ServiceDesk {
 		}
 	}
 
+	// selection for the admin user to view reports
 	private void printReport() {
 		this.scan = new Scanner(System.in);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -299,7 +302,8 @@ public class ServiceDesk {
 		}
 
 	}
-
+ 
+	// staff member menu with validation
 	private void staffMenu() {
 		this.scan = new Scanner(System.in);
 		int menuSelection = 0;
@@ -334,6 +338,7 @@ public class ServiceDesk {
 
 	}
 
+	
 	private void ticketCreation() {
 		String description;
 		int severity;
@@ -357,6 +362,7 @@ public class ServiceDesk {
 
 	}
 
+	// technician menu
 	private void techMenu() {
 		this.scan = new Scanner(System.in);
 		int menuSelection = 0;
@@ -387,11 +393,6 @@ public class ServiceDesk {
 			techMenu();
 		}
 
-		// view tickets even closed within 24 hours
-		// change severity
-		// change status to closed & resolved
-		// change status to closed not resolved
-		// view archived tickets
 	}
 
 	private void statusChange() {

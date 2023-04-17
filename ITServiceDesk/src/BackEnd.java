@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class BackEnd {
 
@@ -24,6 +25,8 @@ public class BackEnd {
 	Users tempTech = null;
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+	// technician and admin hard coded into system to set there user types runs only
+	// if no users file
 	private void initializeTechnicians() {
 		Users tech1 = new Users("harry.styles@cinco.com", "Harry Styles", "0356781000", "Password1",
 				userType.Level1Tech, null);
@@ -44,6 +47,7 @@ public class BackEnd {
 		this.users.add(admin);
 	}
 
+	// load from the save file of users and loads into the arraylist
 	@SuppressWarnings({ "unchecked", "resource" })
 	public void load(String savefile) {
 		File userFile = new File(savefile);
@@ -73,6 +77,7 @@ public class BackEnd {
 		}
 	}
 
+// new creation or change of users will overwrite the file users
 	public void persistUsers(String savefile) {
 		try {
 			FileOutputStream fos = new FileOutputStream(savefile);
@@ -86,6 +91,7 @@ public class BackEnd {
 		}
 	}
 
+	// loads the tickets from the file into the arraylists
 	@SuppressWarnings({ "unchecked", "resource" })
 	public void loadTickets(String savedTickets) {
 		File ticketsFile = new File(savedTickets);
@@ -93,7 +99,6 @@ public class BackEnd {
 		long millis = System.currentTimeMillis();
 		if (ticketsFile.exists()) {
 			try {
-				// current time counter for verification add extra time to this for testing
 				FileInputStream fis = new FileInputStream(savedTickets);
 				BufferedInputStream bis = new BufferedInputStream(fis);
 				ObjectInputStream ois = new ObjectInputStream(bis);
@@ -108,6 +113,7 @@ public class BackEnd {
 
 	}
 
+	// load archive file into arraylist
 	public void loadArchive(String archive) {
 		File archiveFile = new File(archive);
 		List<Ticket> currentArchive = new ArrayList<>();
@@ -128,14 +134,16 @@ public class BackEnd {
 		}
 	}
 
+// on load of program moves the closed tickets to the archive after 24 hours and removes from the ticket arraylist
 	public void resetTickets(String savedTickets, String archive) {
 		long millis = System.currentTimeMillis();
 		this.tempList.clear();
-		// movese file to arcchive file if 24 elapsed
+		// moves file to archive file if 24 elapsed
 		for (Ticket x : tickets) {
 			if (x.getClosed() != null) {
-				// + 24 * 60 * 60 * 1000 add this after millis for 24 hour otherwise they go
-				// straight to archive
+				// + 24 * 60 * 60 * 1000 add this after x.getTimecounter for 24 hour otherwise
+				// they go
+				// straight to archive after closed
 				if (millis >= x.getTimeCounter() && x.getTimeCounter() != 0) {
 					this.archiveTickets.add(x);
 					// add only the newly changed over tickets to a list for removal
@@ -154,22 +162,7 @@ public class BackEnd {
 
 	}
 
-	Users loadUser(String[] values, Hashtable<String, String> securityQuestions) {
-		return new Users(values[0], values[1], values[2], values[3], userType.Staff, securityQuestions);
-	}
-
-	Ticket loadTicket(String[] values) {
-		String description = values[0];
-		int severity = Integer.parseInt(values[1]);
-		String creator = values[2];
-		String assignedTech = values[3];
-		int status = Integer.parseInt(values[4]);
-		LocalDate created = LocalDate.parse(values[5]);
-		LocalDate closed = LocalDate.parse(values[6]);
-		long count = Long.parseLong(values[7]);
-		return new Ticket(description, severity, creator, assignedTech, status, created, closed, count);
-	}
-
+	// validate password from the input
 	public boolean validatePass(String pass) {
 		boolean found = false;
 		if (currentUser.getPassword().matches(pass)) {
@@ -183,6 +176,7 @@ public class BackEnd {
 
 	}
 
+	// validation for unique user email
 	public boolean userExists(String email) {
 		boolean found = false;
 		for (Users x : users) {
@@ -198,6 +192,7 @@ public class BackEnd {
 
 	}
 
+	// log in user validation setting the current user to input
 	public boolean validateUser(String email) {
 		currentUser = null;
 		boolean found = false;
@@ -215,6 +210,8 @@ public class BackEnd {
 		}
 	}
 
+	// ticket creation with user input auto assign tech and fill in not needed
+	// information at this stage
 	public Ticket createTicket(String description, int severity) {
 		String creator = currentUser.getEmail();
 		String tech = null;
@@ -233,6 +230,7 @@ public class BackEnd {
 		return newTicket;
 	}
 
+	// write tickets to file overwrites on use
 	public void persistTickets(String savedTickets) {
 		try {
 			FileOutputStream fos = new FileOutputStream(savedTickets);
@@ -249,6 +247,7 @@ public class BackEnd {
 		}
 	}
 
+	// write achive tickets to file overwrites on use
 	public void persistTickets2(String archive) {
 		try {
 			FileOutputStream fos = new FileOutputStream(archive);
@@ -265,6 +264,7 @@ public class BackEnd {
 		}
 	}
 
+	// maps how many tickets each tech has to allow to assign tickets based on least
 	private HashMap<String, Integer> getAssignedTicketCount() {
 		HashMap<String, Integer> ticketCounts = new HashMap<String, Integer>();
 
@@ -284,6 +284,8 @@ public class BackEnd {
 		return ticketCounts;
 	}
 
+	// math work to assign ticket on correct tech, least ticket count and if more
+	// than 1 with the same ticket will randomise between these users
 	private String assignTicket(int x) {
 		tempUse.clear();
 		tempUseTwo.clear();
@@ -388,6 +390,8 @@ public class BackEnd {
 		return tech;
 	}
 
+	// display for tickets matches tickets to the user or tech and prints in a list
+	// with an index number
 	public void printTickets() {
 		tempList.clear();
 		int i = 1;
@@ -404,6 +408,7 @@ public class BackEnd {
 		if (tempList.isEmpty()) {
 			System.out.println("No tickets");
 		} else {
+			// counter mainly used for tech that allows selection of ticket to change
 			for (Ticket x : tempList) {
 				System.out.println(i + " : " + x);
 				i++;
@@ -414,6 +419,7 @@ public class BackEnd {
 
 	}
 
+	// validation of menu selection to change ticket status or severity
 	public boolean confirmSelection(int x) {
 		int j = x - 1;
 		boolean found = false;
@@ -429,6 +435,10 @@ public class BackEnd {
 
 	}
 
+	// changes status
+	// from open to close will add a timer that allows for the archive to work
+	// from close to open will remove the counter so that the ticket doesnt get
+	// archived
 	public void changeTicketStatus(int ticketSelection, int statusSelection, int closedTime) {
 		for (Ticket x : tickets) {
 			if (tempList.get(ticketSelection - 1).equals(x)) {
@@ -444,6 +454,7 @@ public class BackEnd {
 		}
 	}
 
+	// changes ticket severity keeps assigned to same tech
 	public void changeTicketSeverityBasic(int ticketSelection, int severitySelection) {
 		for (Ticket x : tickets) {
 			if (tempList.get(ticketSelection - 1).equals(x)) {
@@ -453,6 +464,8 @@ public class BackEnd {
 
 	}
 
+	// changes severity and reassigns if the ticket goes outside the technicians
+	// level
 	public void changeTicketSeverityAll(int ticketSelection, int severitySelection) {
 		for (Ticket x : tickets) {
 			if (tempList.get(ticketSelection - 1).equals(x)) {
@@ -462,26 +475,25 @@ public class BackEnd {
 		}
 	}
 
+	// admin ticket viewer prints out from selection of days all tickets
 	public void printReportDays(LocalDate dayStart, LocalDate dayEnd) {
 		int ticketCount = 0;
 		int openCount = 0;
 		int closedCount = 0;
-
 		// add to selection list from the dates provided
 		selectionTickets.clear();
 		int i = 1;
+		// adds all the tickets within this range from the tickets
 		for (Ticket x : tickets) {
 			if (x.getCreated().isAfter(dayStart) || x.getCreated().isEqual(dayStart)) {
 				if (x.getClosed() != null) {
-					if (x.getCreated().isBefore(dayEnd)
-							|| x.getCreated().isEqual(dayEnd)) {
+					if (x.getCreated().isBefore(dayEnd) || x.getCreated().isEqual(dayEnd)) {
 						this.selectionTickets.add(x);
 						ticketCount++;
 						closedCount++;
 					}
 
-				} else if (x.getClosed() == null && x.getCreated().isBefore(dayEnd)
-						|| x.getCreated().isEqual(dayEnd)) {
+				} else if (x.getClosed() == null && x.getCreated().isBefore(dayEnd) || x.getCreated().isEqual(dayEnd)) {
 					this.selectionTickets.add(x);
 					ticketCount++;
 					openCount++;
@@ -489,9 +501,10 @@ public class BackEnd {
 
 			}
 		}
+		// adds all the tickets within the range from the archive
 		for (Ticket x : archiveTickets) {
-			if ((x.getCreated().isAfter(dayStart) || x.getCreated().isEqual(dayStart)) && (x.getCreated().isBefore(dayEnd)
-					|| x.getCreated().isEqual(dayEnd))) {
+			if ((x.getCreated().isAfter(dayStart) || x.getCreated().isEqual(dayStart))
+					&& (x.getCreated().isBefore(dayEnd) || x.getCreated().isEqual(dayEnd))) {
 
 				this.selectionTickets.add(x);
 				ticketCount++;
@@ -509,16 +522,20 @@ public class BackEnd {
 			System.out.println("------------------------------------------------------");
 			for (Ticket x : selectionTickets) {
 				if (x.getClosed() != null) {
+					long period = ChronoUnit.DAYS.between(x.getCreated(), x.getClosed());
 					System.out.println(i + " : " + x + "\n    Date created : " + formatter.format(x.getCreated())
-							+ "\n    Date Closed : " + formatter.format(x.getClosed()));
+							+ "\n    Date Closed : " + formatter.format(x.getClosed()) + "\n    Days taken : "
+							+ period);
 					i++;
 					System.out.println("------------------------------------------------------");
 				} else {
+					long period = ChronoUnit.DAYS.between(x.getCreated(), LocalDate.now());
 					System.out.println(i + " : " + x + "\n    Date created : " + formatter.format(x.getCreated())
-							+ "\n    Date Closed : N/A");
+							+ "\n    Date Closed : N/A\n    Days Open : " + period);
 					i++;
 					System.out.println("------------------------------------------------------");
 				}
+
 			}
 		}
 		System.out.println("");
