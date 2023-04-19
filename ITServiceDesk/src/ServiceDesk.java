@@ -201,7 +201,7 @@ public class ServiceDesk {
 
 	}
 
-	// main login menu with validations 
+	// main login menu with validations
 	private void login() {
 		this.scan = new Scanner(System.in);
 		String user;
@@ -219,12 +219,17 @@ public class ServiceDesk {
 				try {
 					if (be.validatePass(pass)) {
 						if (be.currentUser.getSecurityQuestions() == null) {
-							System.out.println("We noticed you do not have any security questions in case you"
-									+ " forget your password? Would you like to record some now? (Y/N)");
-							String response = scan.nextLine();
-							if (response == "Y") {
-								recordSecurityQuestions();
-							}
+							char response;
+							do {
+								System.out.println("We noticed you do not have any security questions in case you"
+										+ " forget your password? Would you like to record some now? (Y/N)");
+								// Get the first character from the input. Discard the rest.
+								response = (scan.nextLine()).charAt(0);
+								if (response == 'Y') {
+									be.currentUser.setSecurityQuestions(recordSecurityQuestions());
+									be.persistUsers(savefile);
+								}
+							} while ((response != 'Y') && (response != 'N'));
 						}
 						if (be.currentUser.getUserType() == userType.Staff) {
 							staffMenu();
@@ -302,7 +307,7 @@ public class ServiceDesk {
 		}
 
 	}
- 
+
 	// staff member menu with validation
 	private void staffMenu() {
 		this.scan = new Scanner(System.in);
@@ -338,7 +343,7 @@ public class ServiceDesk {
 
 	}
 
-	
+
 	private void ticketCreation() {
 		String description;
 		int severity;
@@ -526,9 +531,7 @@ public class ServiceDesk {
 				be.changeTicketSeverityAll(ticketSelection, severitySelection);
 				be.persistTickets(savedTickets);
 				techMenu();
-			}
-
-			else {
+			} else {
 				System.out.print("Return to menu");
 				techMenu();
 			}
