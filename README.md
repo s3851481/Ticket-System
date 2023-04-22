@@ -138,6 +138,29 @@ Change Status
  3. Select the new status of the ticket by typing the number that represents the status.
  
  4. Congratulations you have changed the status
+ 
+  Admin Login
+
+ You must enter admin details in order to login as admin. For testing purposes the admin login is as follows.
+
+ Email: admin@cinco.com
+ Password: Admin
+
+ 1. Select login from the main menu.
+
+ 2. Enter the admin details listed above.
+
+ 3. Congratulations you have now logged in as an Admin.
+
+Print Report
+
+1. select "print report" from the Administrator menu.
+
+2. enter a date in the displayed format for start date i.e. (dd/mm/yyyy)
+
+3. enter a date in displayed format for end date.
+
+4. Congratulations you can now view all tickets for the period listed.
 
  
  
