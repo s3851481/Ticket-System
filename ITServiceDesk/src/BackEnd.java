@@ -142,7 +142,7 @@ public class BackEnd {
 				// + 24 * 60 * 60 * 1000 add this after x.getTimecounter for 24 hour otherwise
 				// they go
 				// straight to archive after closed
-				if (millis >= x.getTimeCounter() && x.getTimeCounter() != 0) {
+				if (millis >= x.getTimeCounter() + 24 * 60 * 60 * 1000 && x.getTimeCounter() != 0) {
 					this.archiveTickets.add(x);
 					// add only the newly changed over tickets to a list for removal
 					this.tempList.add(x);
@@ -394,7 +394,7 @@ public class BackEnd {
 		tempList.clear();
 		int i = 1;
 		for (Ticket x : tickets) {
-			if (x.getCreator().matches(currentUser.getEmail())&& x.getClosed() == null) {
+			if (x.getCreator().matches(currentUser.getEmail()) && x.getClosed() == null) {
 				tempList.add(x);
 			} else if (x.getAssignedTech().matches(currentUser.getEmail())) {
 				tempList.add(x);
@@ -503,7 +503,6 @@ public class BackEnd {
 		for (Ticket x : archiveTickets) {
 			if ((x.getCreated().isAfter(dayStart) || x.getCreated().isEqual(dayStart))
 					&& (x.getCreated().isBefore(dayEnd) || x.getCreated().isEqual(dayEnd))) {
-
 				this.selectionTickets.add(x);
 				ticketCount++;
 				closedCount++;

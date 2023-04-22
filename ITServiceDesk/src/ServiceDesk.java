@@ -20,7 +20,7 @@ public class ServiceDesk {
 		be.load(savefile);
 		be.loadTickets(savedTickets);
 		be.loadArchive(archive);
-		be.resetTickets(savedTickets,archive);
+		be.resetTickets(savedTickets, archive);
 		System.out.println("Welcome to IT service desk");
 		loginMenu();
 	}
@@ -67,7 +67,7 @@ public class ServiceDesk {
 		String user;
 		System.out.println("Please enter username:");
 		user = scan.nextLine();
-		while(!be.validateUser(user)) {
+		while (!be.validateUser(user)) {
 			System.out.println("Username incorrect! Please enter username:");
 			user = scan.nextLine();
 		}
@@ -130,11 +130,10 @@ public class ServiceDesk {
 		if (be.userExists(email)) {
 			System.out.println("Email already in use");
 			setUp();
+		} else if (!matcher.matches()) {
+			System.out.println("invalid email address must contain @ and be .com");
+			setUp();
 		}
-		// else if (!matcher.matches()) {
-		// System.out.println("invalid email address must contain @ and be .com");
-		// setUp();
-		// }
 		// validation needed and match from file
 		System.out.println("Please enter Full name");
 		name = scan.nextLine();
@@ -161,16 +160,14 @@ public class ServiceDesk {
 		// lines for testing ease
 		Pattern pass = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{20,30}$");
 		Matcher longPass = pass.matcher(password);
-		// while (!longPass.matches()) {
-		// System.out.println(
-		// "Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase
-		// alphanumeric");
-		// password = scan.nextLine();
-		// longPass = pass.matcher(password);
-		// }
+		while (!longPass.matches()) {
+			System.out.println(
+					"Must be minimum 20 characters maximum 30 with atleast 1 upper and lowercase alphanumeric");
+			password = scan.nextLine();
+			longPass = pass.matcher(password);
+		}
 		// validation needed for password requirements min 20 char with mix of
 		// characters
-		// String values[] = {email, name, Integer.toString(phoneNumber), password};
 		Hashtable<String, String> securityQuestions = this.recordSecurityQuestions();
 		// be.createNewUser(values, securityQuestions);
 		try {
@@ -208,7 +205,7 @@ public class ServiceDesk {
 		String pass;
 		System.out.println("Please enter email address");
 		user = scan.nextLine();
-		while(!be.validateUser(user)) {
+		while (!be.validateUser(user)) {
 			System.out.println("Username incorrect! Please enter username:");
 			user = scan.nextLine();
 		}
@@ -334,15 +331,12 @@ public class ServiceDesk {
 			staffMenu();
 		}
 
-
 	}
-
 
 	private void viewTickets() {
 		be.printTickets();
 
 	}
-
 
 	private void ticketCreation() {
 		String description;
