@@ -224,7 +224,7 @@ public class ServiceDesk {
 								System.out.println("We noticed you do not have any security questions in case you"
 										+ " forget your password? Would you like to record some now? (Y/N)");
 								// Get the first character from the input. Discard the rest.
-								response = (scan.nextLine()).charAt(0);
+								response = Character.toUpperCase(scan.nextLine().charAt(0));
 								if (response == 'Y') {
 									be.currentUser.setSecurityQuestions(recordSecurityQuestions());
 									be.persistUsers(savefile);
